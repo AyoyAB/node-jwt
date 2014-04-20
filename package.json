@@ -1,0 +1,32 @@
+{
+  "name": "node-jwt",
+  "version": "0.0.0",
+  "description": "JSON Web Token module for Node.js.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "mocha": "~1.18.2"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AyoyAB/node-jwt.git"
+  },
+  "keywords": [
+    "jwt",
+    "json",
+    "web",
+    "token"
+  ],
+  "author": "Oscar Jacobsson <oscar@ayoy.se> (http://www.ayoy.se/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AyoyAB/node-jwt/issues"
+  },
+  "homepage": "https://github.com/AyoyAB/node-jwt"
+}
