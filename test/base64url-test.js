@@ -1,4 +1,4 @@
-var expect = require('chai').expect;
+var expect    = require('chai').expect;
 var base64url = require('../lib/base64url');
 
 describe('base64url', function() {
