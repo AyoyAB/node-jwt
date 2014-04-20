@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var base64url = require('../lib/base64url');
 
 describe('base64url', function() {
+    // NB: Test data is from RFC 4648.
     var base64Alphabet    = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     var base64urlAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
