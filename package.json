@@ -1,6 +1,6 @@
 {
   "name": "node-jwt",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "JSON Web Token module for Node.js.",
   "main": "index.js",
   "directories": {
