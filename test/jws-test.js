@@ -11,6 +11,7 @@ describe('jws', function() {
     var PAYLOAD = { iss: 'joe', exp: 1300819380, 'http://example.com/is_root': true };
     var ENCODED_PAYLOAD = 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ';
     var ENCODED_SIGNATURE = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
+    var ENCODED_TOKEN = ENCODED_PROTECTED_HEADER + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE;
 
     describe('.createHmac()', function() {
         it('should correctly generate JWS draft example A1', function () {
@@ -52,6 +53,24 @@ describe('jws', function() {
 
             var expectedEncodedPayload = base64url.fromBase64String(new Buffer(JSON.stringify(PAYLOAD)).toString('base64'));
             expect(expectedEncodedPayload).to.equal(encodedPayload);
+        });
+    });
+
+    describe('.validateJws()', function() {
+        it('should complain if less than three fields are present', function () {
+            expect(function () {
+                jws.validateJws('aaaa.bbbb', HMAC_KEY);
+            }).to.throw('Invalid JWS');
+        });
+
+        it('should complain if a more than three fields are present', function () {
+            expect(function () {
+                jws.validateJws('aaaa.bbbb.cccc.dddd', HMAC_KEY);
+            }).to.throw('Invalid JWS');
+        });
+
+        it('should correctly validate JWS draft example A1', function () {
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY)).to.be.true;
         });
     });
 });
