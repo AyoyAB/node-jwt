@@ -29,6 +29,14 @@ describe('jws', function() {
     });
 
     describe('.encodeJws()', function() {
+        it('should complain if no algorithm is specified', function() {
+            expect(function() { jws.encodeJws({ typ: 'JWT' }, PAYLOAD, HMAC_KEY); }).to.throw('alg parameter must be present in header');
+        });
+
+        it('should complain if an invalid algorithm is specified', function() {
+            expect(function() { jws.encodeJws({ typ: 'JWT', alg: 'ABC123' }, PAYLOAD, HMAC_KEY); }).to.throw('Unsupported algorithm: ABC123');
+        });
+
         it('should correctly generate JWS draft example A1', function () {
             var encodedToken = jws.encodeJws(PROTECTED_HEADER, PAYLOAD, HMAC_KEY);
 
