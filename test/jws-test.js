@@ -63,10 +63,18 @@ describe('jws', function() {
             }).to.throw('Invalid JWS');
         });
 
-        it('should complain if a more than three fields are present', function () {
+        it('should complain if more than three fields are present', function () {
             expect(function () {
                 jws.validateJws('aaaa.bbbb.cccc.dddd', HMAC_KEY);
             }).to.throw('Invalid JWS');
+        });
+
+        it('should not validate a truncated token', function () {
+            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.be.false;
+        });
+
+        it('should not validate a paded token', function () {
+            expect(jws.validateJws(ENCODED_TOKEN+"1", HMAC_KEY)).to.be.false;
         });
 
         it('should correctly validate JWS draft example A1', function () {
