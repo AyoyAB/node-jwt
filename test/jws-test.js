@@ -8,7 +8,7 @@ describe('jws', function() {
     var HMAC_KEY = 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow';
     var PROTECTED_HEADER = { typ: 'JWT', alg: 'HS256' };
     var ENCODED_PROTECTED_HEADER = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9';
-    var PAYLOAD = { iss: 'joe', exp: 1300819380, 'http://example.com/is_root': true };
+    var PAYLOAD = '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}';
     var ENCODED_PAYLOAD = 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ';
     var ENCODED_SIGNATURE = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
     var ENCODED_TOKEN = ENCODED_PROTECTED_HEADER + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE;
@@ -51,7 +51,7 @@ describe('jws', function() {
             var expectedEncodedHeader = base64url.fromBase64String(new Buffer(JSON.stringify(PROTECTED_HEADER)).toString('base64'));
             expect(expectedEncodedHeader).to.equal(encodedHeader);
 
-            var expectedEncodedPayload = base64url.fromBase64String(new Buffer(JSON.stringify(PAYLOAD)).toString('base64'));
+            var expectedEncodedPayload = base64url.fromBase64String(new Buffer(PAYLOAD).toString('base64'));
             expect(expectedEncodedPayload).to.equal(encodedPayload);
         });
     });
