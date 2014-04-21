@@ -1,6 +1,6 @@
 REPORTER = spec
 
-all: jshint test
+all: test
 
 test: test/keys
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
@@ -15,5 +15,9 @@ test/keys:
 	@openssl ec -in test/es256-alice-priv.pem -pubout > test/es256-alice-pub.pem
 	@openssl ec -in test/es256-bob-priv.pem -pubout > test/es256-bob-pub.pem
 	@touch test/keys
+
+clean:
+	@rm test/*.pem
+	@rm test/keys
 
 .PHONY: test
