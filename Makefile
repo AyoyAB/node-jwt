@@ -2,10 +2,18 @@ REPORTER = spec
 
 all: jshint test
 
-test:
+test: test/keys
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
 
-jshint:
-	jshint lib examples test index.js
+test/keys:
+	@openssl genrsa 2048 > test/rs256-alice-priv.pem
+	@openssl genrsa 2048 > test/rs256-bob-priv.pem
+	@openssl rsa -in test/rs256-alice-priv.pem -pubout > test/rs256-alice-pub.pem
+	@openssl rsa -in test/rs256-bob-priv.pem -pubout > test/rs256-bob-pub.pem
+	@openssl ecparam -out test/es256-alice-priv.pem -name secp256r1 -genkey
+	@openssl ecparam -out test/es256-bob-priv.pem -name secp256r1 -genkey
+	@openssl ec -in test/es256-alice-priv.pem -pubout > test/es256-alice-pub.pem
+	@openssl ec -in test/es256-bob-priv.pem -pubout > test/es256-bob-pub.pem
+	@touch test/keys
 
-.PHONY: test jshint
+.PHONY: test

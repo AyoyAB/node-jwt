@@ -27,3 +27,6 @@ node_modules
 # IntelliJ project files
 .idea/
 
+
+test/*.pem
+test/keys
