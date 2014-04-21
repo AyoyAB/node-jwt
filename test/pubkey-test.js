@@ -16,15 +16,19 @@ describe('pubKey', function() {
         ALICE_RSA_PUBLIC_KEY   = fs.readFileSync(__dirname + '/rs256-alice-pub.pem').toString();
     });
 
-    it('should correctly sign and verify ES256 signatures', function() {
-        var signature = pubKey.doSign('sha256', ALICE_P256_PRIVATE_KEY, PAYLOAD);
+    describe('ES256', function() {
+        it('should correctly sign and verify ES256 signatures', function() {
+            var signature = pubKey.doSign('sha256', ALICE_P256_PRIVATE_KEY, PAYLOAD);
 
-        expect(pubKey.doVerify('sha256', ALICE_P256_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha256', ALICE_P256_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+        });
     });
 
-    it('should correctly sign and verify RS256 signatures', function() {
-        var signature = pubKey.doSign('sha256', ALICE_RSA_PRIVATE_KEY, PAYLOAD);
+    describe('ES256', function() {
+        it('should correctly sign and verify RS256 signatures', function() {
+            var signature = pubKey.doSign('sha256', ALICE_RSA_PRIVATE_KEY, PAYLOAD);
 
-        expect(pubKey.doVerify('sha256', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha256', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+        });
     });
 });
