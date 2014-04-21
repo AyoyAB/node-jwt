@@ -69,12 +69,28 @@ describe('jws', function() {
             }).to.throw('Invalid JWS');
         });
 
-        it('should not validate a truncated token', function () {
+        it('should not validate a modified signature', function () {
+            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.be.false;
+        });
+
+        it('should not validate a truncated signature', function () {
             expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.be.false;
         });
 
-        it('should not validate a paded token', function () {
+        it('should not validate a padded signature', function () {
             expect(jws.validateJws(ENCODED_TOKEN+"1", HMAC_KEY)).to.be.false;
+        });
+
+        it('should not validate with a modified key', function () {
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2) + '12')).to.be.false;
+        });
+
+        it('should not validate with a truncated key', function () {
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2))).to.be.false;
+        });
+
+        it('should not validate with a padded key', function () {
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY+"1")).to.be.false;
         });
 
         it('should correctly validate JWS draft example A1', function () {
