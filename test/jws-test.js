@@ -6,7 +6,7 @@ describe('jws', function() {
     // Test data from JWS Internet Draft example A.1
     var HMAC_ALGORITHM = jws.Algorithms.HmacWithSha256;
     var HMAC_KEY = 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow';
-    var PROTECTED_HEADER = { typ: 'JWT', alg: 'HS256' };
+    var PROTECTED_HEADER = { typ: 'JWT', alg: HMAC_ALGORITHM };
     var ENCODED_PROTECTED_HEADER = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9';
     var PAYLOAD = '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}';
     var ENCODED_PAYLOAD = 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ';

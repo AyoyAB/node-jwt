@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var hmac = require('../lib/hmac');
+var hmac   = require('../lib/hmac');
 
 describe('hmac', function() {
     describe('RFC 4231 test cases', function () {
