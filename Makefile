@@ -1,6 +1,9 @@
 REPORTER = spec
 
-all: test
+all: jshint test
+
+jshint:
+	./node_modules/.bin/jshint lib test index.js
 
 test: test/keys
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
@@ -20,4 +23,4 @@ clean:
 	@rm test/*.pem
 	@rm test/keys
 
-.PHONY: test
+.PHONY: all test jshint clean
