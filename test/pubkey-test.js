@@ -10,10 +10,10 @@ describe('pubKey', function() {
     var ALICE_RSA_PUBLIC_KEY;
 
     before(function() {
-        ALICE_P256_PRIVATE_KEY = fs.readFileSync(__dirname + '/es256-alice-priv.pem').toString();
-        ALICE_P256_PUBLIC_KEY  = fs.readFileSync(__dirname + '/es256-alice-pub.pem').toString();
-        ALICE_RSA_PRIVATE_KEY  = fs.readFileSync(__dirname + '/rs256-alice-priv.pem').toString();
-        ALICE_RSA_PUBLIC_KEY   = fs.readFileSync(__dirname + '/rs256-alice-pub.pem').toString();
+        ALICE_P256_PRIVATE_KEY = fs.readFileSync(__dirname + '/../testdata/es256-alice-priv.pem').toString();
+        ALICE_P256_PUBLIC_KEY  = fs.readFileSync(__dirname + '/../testdata/es256-alice-pub.pem').toString();
+        ALICE_RSA_PRIVATE_KEY  = fs.readFileSync(__dirname + '/../testdata/rs256-alice-priv.pem').toString();
+        ALICE_RSA_PUBLIC_KEY   = fs.readFileSync(__dirname + '/../testdata/rs256-alice-pub.pem').toString();
     });
 
     describe('ES256', function() {
