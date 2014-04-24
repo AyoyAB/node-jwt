@@ -69,6 +69,12 @@ describe('jws', function() {
             }).to.throw('Invalid JWS');
         });
 
+        it('should complain if a non-JSON header is supplied', function () {
+            expect(function () {
+                jws.validateJws('aaaa' + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE, HMAC_KEY);
+            }).to.throw('JWS protected header is not valid JSON');
+        });
+
         it('should not validate a modified signature', function () {
             expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.be.false;
         });
