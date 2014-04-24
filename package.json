@@ -6,10 +6,17 @@
   "directories": {
     "test": "test"
   },
+  "config": {
+    "blanket": {
+      "pattern": "lib",
+      "data-cover-never": "node_modules"
+    }
+  },
   "devDependencies": {
     "chai": "~1.9.1",
     "mocha": "~1.18.2",
-    "jshint": "~2.5.0"
+    "jshint": "~2.5.0",
+    "blanket": "~1.1.6"
   },
   "scripts": {
     "test": "make test"

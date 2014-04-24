@@ -1,12 +1,16 @@
-REPORTER = spec
+REPORTER_TEST = spec
+REPORTER_COVERAGE = html-cov
 
-all: jshint test
+all: jshint test coverage
 
 jshint:
 	@./node_modules/.bin/jshint lib test index.js
 
 test: testdata
-	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER) --timeout 3000
+	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER_TEST) --timeout 3000
+
+coverage: testdata
+	@NODE_ENV=test ./node_modules/.bin/mocha --require blanket --recursive --reporter $(REPORTER_COVERAGE) --timeout 3000 > coverage.html
 
 testdata:
 	@$(MAKE) -C testdata testdata
@@ -14,4 +18,4 @@ testdata:
 clean:
 	@$(MAKE) -C testdata clean
 
-.PHONY: all jshint test testdata clean
+.PHONY: all jshint test coverage testdata clean

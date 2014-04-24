@@ -30,3 +30,6 @@ node_modules
 
 # Test data
 testdata/*.pem
+
+# Test coverage report
+coverage.html
