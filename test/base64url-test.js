@@ -13,6 +13,10 @@ describe('base64url', function() {
             expect(res.length).to.equal(0);
         });
 
+        it('should flag a one character string as invalid', function() {
+           expect(function () { base64url.toBase64String('Z'); }).to.throw('Invalid base64 string');
+        });
+
         it('should pad two character strings with two characters', function () {
             var res = base64url.toBase64String('Zg');
 
@@ -41,6 +45,10 @@ describe('base64url', function() {
             expect(res[1]).to.equal('m');
             expect(res[2]).to.equal('9');
             expect(res[3]).to.equal('v');
+        });
+
+        it('should flag a five character string as invalid', function() {
+            expect(function () { base64url.toBase64String('Zm9vY'); }).to.throw('Invalid base64 string');
         });
 
         it('should pad six character strings with two characters', function () {
