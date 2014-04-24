@@ -33,3 +33,6 @@ testdata/*.pem
 
 # Test coverage report
 coverage.html
+
+# Generated documentation
+docs/

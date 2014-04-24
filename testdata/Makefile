@@ -27,6 +27,6 @@ rs256-bob-priv.pem:
 	@openssl genrsa 2048 > rs256-bob-priv.pem
 
 clean:
-	@rm *.pem
+	-rm *.pem
 
 .PHONY: all testdata clean

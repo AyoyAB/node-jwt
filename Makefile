@@ -1,7 +1,7 @@
 REPORTER_TEST = spec
 REPORTER_COVERAGE = html-cov
 
-all: jshint test coverage
+all: jshint test coverage docs
 
 jshint:
 	@./node_modules/.bin/jshint lib test index.js
@@ -15,7 +15,11 @@ coverage: testdata
 testdata:
 	@$(MAKE) -C testdata testdata
 
+docs:
+	@./node_modules/.bin/groc lib/*.js README.md -o docs
+
 clean:
 	@$(MAKE) -C testdata clean
+	-rm -rf docs
 
-.PHONY: all jshint test coverage testdata clean
+.PHONY: all jshint test coverage testdata docs clean
