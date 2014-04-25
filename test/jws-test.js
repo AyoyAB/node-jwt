@@ -4,7 +4,7 @@ var base64url = require('../lib/base64url');
 
 describe('jws', function() {
     // Test data from JWS Internet Draft example A.1
-    var HMAC_ALGORITHM = jws.Algorithms.HmacWithSha256;
+    var HMAC_ALGORITHM = jws.algorithm.HmacWithSha256;
     var HMAC_KEY = 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow';
     var PROTECTED_HEADER = { typ: 'JWT', alg: HMAC_ALGORITHM };
     var ENCODED_PROTECTED_HEADER = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9';
