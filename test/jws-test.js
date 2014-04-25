@@ -25,8 +25,8 @@ describe('jws', function() {
         it('should correctly validate JWS draft example A1', function() {
             var isValid = jws.validateHmac(HMAC_ALGORITHM, HMAC_KEY, ENCODED_PROTECTED_HEADER, ENCODED_PAYLOAD, ENCODED_SIGNATURE);
 
-            expect(isValid).to.be.true;
-        })
+            expect(isValid).to.equal(true);
+        });
     });
 
     describe('.encodeJws()', function() {
@@ -46,7 +46,7 @@ describe('jws', function() {
             var encodedPayload = encodedToken.split('.')[1];
             var encodedSignature = encodedToken.split('.')[2];
             var isValid = jws.validateHmac(HMAC_ALGORITHM, HMAC_KEY, encodedHeader, encodedPayload, encodedSignature);
-            expect(isValid).to.be.true;
+            expect(isValid).to.equal(true);
 
             var expectedEncodedHeader = base64url.fromBase64String(new Buffer(JSON.stringify(PROTECTED_HEADER)).toString('base64'));
             expect(expectedEncodedHeader).to.equal(encodedHeader);
@@ -76,31 +76,31 @@ describe('jws', function() {
         });
 
         it('should not validate a modified signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate a truncated signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate a padded signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN+"1", HMAC_KEY)).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN+"1", HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate with a modified key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2) + '12')).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2) + '12')).to.equal(false);
         });
 
         it('should not validate with a truncated key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2))).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2))).to.equal(false);
         });
 
         it('should not validate with a padded key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY+"1")).to.be.false;
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY+"1")).to.equal(false);
         });
 
         it('should correctly validate JWS draft example A1', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY)).to.be.true;
+            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY)).to.equal(true);
         });
     });
 });

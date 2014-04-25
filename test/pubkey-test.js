@@ -20,7 +20,7 @@ describe('pubKey', function() {
         it('should correctly sign and verify ES256 signatures', function() {
             var signature = pubKey.doSign('sha256', ALICE_P256_PRIVATE_KEY, PAYLOAD);
 
-            expect(pubKey.doVerify('sha256', ALICE_P256_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha256', ALICE_P256_PUBLIC_KEY, PAYLOAD, signature)).to.equal(true);
         });
     });
 
@@ -28,7 +28,7 @@ describe('pubKey', function() {
         it('should correctly sign and verify RS256 signatures', function() {
             var signature = pubKey.doSign('sha256', ALICE_RSA_PRIVATE_KEY, PAYLOAD);
 
-            expect(pubKey.doVerify('sha256', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha256', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.equal(true);
         });
     });
 
@@ -36,7 +36,7 @@ describe('pubKey', function() {
         it('should correctly sign and verify RS384 signatures', function() {
             var signature = pubKey.doSign('sha384', ALICE_RSA_PRIVATE_KEY, PAYLOAD);
 
-            expect(pubKey.doVerify('sha384', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha384', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.equal(true);
         });
     });
 
@@ -44,7 +44,7 @@ describe('pubKey', function() {
         it('should correctly sign and verify RS512 signatures', function() {
             var signature = pubKey.doSign('sha512', ALICE_RSA_PRIVATE_KEY, PAYLOAD);
 
-            expect(pubKey.doVerify('sha512', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.be.true;
+            expect(pubKey.doVerify('sha512', ALICE_RSA_PUBLIC_KEY, PAYLOAD, signature)).to.equal(true);
         });
     });
 });
