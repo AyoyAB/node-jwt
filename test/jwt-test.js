@@ -1,8 +1,9 @@
-var expect    = require('chai').expect;
-var jws       = require('../lib/jws');
-var base64url = require('../lib/base64url');
+var expect      = require('chai').expect;
+var jwt         = require('../lib/jwt');
+var jws         = require('../lib/jws');
+var base64url   = require('../lib/base64url');
 
-describe('jws', function() {
+describe('jwt', function() {
     // Test data from JWS Internet Draft example A.1
     var HMAC_ALGORITHM = jws.algorithm.HmacWithSha256;
     var HMAC_KEY = 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow';
@@ -13,33 +14,17 @@ describe('jws', function() {
     var ENCODED_SIGNATURE = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
     var ENCODED_TOKEN = ENCODED_PROTECTED_HEADER + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE;
 
-    describe('.createHmac()', function() {
-        it('should correctly generate JWS draft example A1', function () {
-            var mac = jws.createHmac(HMAC_ALGORITHM, HMAC_KEY, ENCODED_PROTECTED_HEADER, ENCODED_PAYLOAD);
-
-            expect(mac).to.equal(ENCODED_SIGNATURE);
-        });
-    });
-
-    describe('.validateHmac()', function() {
-        it('should correctly validate JWS draft example A1', function() {
-            var isValid = jws.validateHmac(HMAC_ALGORITHM, HMAC_KEY, ENCODED_PROTECTED_HEADER, ENCODED_PAYLOAD, ENCODED_SIGNATURE);
-
-            expect(isValid).to.equal(true);
-        });
-    });
-
     describe('.encodeJws()', function() {
         it('should complain if no algorithm is specified', function() {
-            expect(function() { jws.encodeJws({ typ: 'JWT' }, PAYLOAD, HMAC_KEY); }).to.throw('alg parameter must be present in header');
+            expect(function() { jwt.encodeJwt({ typ: 'JWT' }, PAYLOAD, HMAC_KEY); }).to.throw('alg parameter must be present in header');
         });
 
         it('should complain if an invalid algorithm is specified', function() {
-            expect(function() { jws.encodeJws({ typ: 'JWT', alg: 'ABC123' }, PAYLOAD, HMAC_KEY); }).to.throw('Unsupported algorithm: ABC123');
+            expect(function() { jwt.encodeJwt({ typ: 'JWT', alg: 'ABC123' }, PAYLOAD, HMAC_KEY); }).to.throw('Unsupported algorithm: ABC123');
         });
 
         it('should correctly generate JWS draft example A1', function () {
-            var encodedToken = jws.encodeJws(PROTECTED_HEADER, PAYLOAD, HMAC_KEY);
+            var encodedToken = jwt.encodeJwt(PROTECTED_HEADER, PAYLOAD, HMAC_KEY);
 
             // NB: We can't do a straight comparison with the test data here, since the JSON lib used in the draft spec adds line feeds during serialization.
             var encodedHeader = encodedToken.split('.')[0];
@@ -59,48 +44,48 @@ describe('jws', function() {
     describe('.validateJws()', function() {
         it('should complain if less than three fields are present', function () {
             expect(function () {
-                jws.validateJws('aaaa.bbbb', HMAC_KEY);
-            }).to.throw('Invalid JWS');
+                jwt.validateJwt('aaaa.bbbb', HMAC_KEY);
+            }).to.throw('Invalid JWT');
         });
 
         it('should complain if more than three fields are present', function () {
             expect(function () {
-                jws.validateJws('aaaa.bbbb.cccc.dddd', HMAC_KEY);
-            }).to.throw('Invalid JWS');
+                jwt.validateJwt('aaaa.bbbb.cccc.dddd', HMAC_KEY);
+            }).to.throw('Invalid JWT');
         });
 
         it('should complain if a non-JSON header is supplied', function () {
             expect(function () {
-                jws.validateJws('aaaa' + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE, HMAC_KEY);
+                jwt.validateJwt('aaaa' + '.' + ENCODED_PAYLOAD + '.' + ENCODED_SIGNATURE, HMAC_KEY);
             }).to.throw('JWS protected header is not valid JSON');
         });
 
         it('should not validate a modified signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1) + '1', HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate a truncated signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN.substring(0, ENCODED_TOKEN.length - 1), HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate a padded signature', function () {
-            expect(jws.validateJws(ENCODED_TOKEN+"1", HMAC_KEY)).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN+"1", HMAC_KEY)).to.equal(false);
         });
 
         it('should not validate with a modified key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2) + '12')).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2) + '12')).to.equal(false);
         });
 
         it('should not validate with a truncated key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2))).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN, HMAC_KEY.substring(0, HMAC_KEY.length - 2))).to.equal(false);
         });
 
         it('should not validate with a padded key', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY+"1")).to.equal(false);
+            expect(jwt.validateJwt(ENCODED_TOKEN, HMAC_KEY+"1")).to.equal(false);
         });
 
         it('should correctly validate JWS draft example A1', function () {
-            expect(jws.validateJws(ENCODED_TOKEN, HMAC_KEY)).to.equal(true);
+            expect(jwt.validateJwt(ENCODED_TOKEN, HMAC_KEY)).to.equal(true);
         });
     });
 });
