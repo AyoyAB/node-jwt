@@ -4,7 +4,7 @@ REPORTER_COVERAGE = html-cov
 all: jshint test coverage docs
 
 jshint:
-	@./node_modules/.bin/jshint lib test index.js
+	@./node_modules/.bin/jshint lib test
 
 test: testdata
 	@NODE_ENV=test ./node_modules/.bin/mocha --recursive --reporter $(REPORTER_TEST) --timeout 3000
