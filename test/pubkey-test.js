@@ -64,7 +64,7 @@ describe('pubKey', function() {
         });
     });
 
-    describe('RS384', function() {
+    xdescribe('RS384', function() {
         it('should correctly sign and verify RS384 signatures', function() {
             var signature = pubKey.doSign('sha384', ALICE_RS384_PRIVATE_KEY, PAYLOAD);
 
@@ -72,7 +72,7 @@ describe('pubKey', function() {
         });
     });
 
-    describe('RS512', function() {
+    xdescribe('RS512', function() {
         it('should correctly sign and verify RS512 signatures', function() {
             var signature = pubKey.doSign('sha512', ALICE_RS512_PRIVATE_KEY, PAYLOAD);
 
