@@ -132,30 +132,6 @@ describe('asn1', function() {
             expect(bufferEquals(res, new Buffer([ 0x03, 0x06, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04 ]))).to.equal(true);
         });
     });
-    describe('.encodePublicKey()', function () {
-        it('should correctly encode a trivial two-byte public ECC key', function() {
-            var res = asn1.encodePublicKey(new Buffer([ 0x01 ]), new Buffer([ 0x02 ]));
-            expect(bufferEquals(res, new Buffer([ 0xa1, 0x06, 0x03, 0x04, 0x00, 0x04, 0x01, 0x02 ]))).to.equal(true);
-        });
-        it('should correctly encode a trivial four-byte public ECC key', function() {
-            var res = asn1.encodePublicKey(new Buffer([ 0x01, 0x02 ]), new Buffer([ 0x03, 0x04 ]));
-            expect(bufferEquals(res, new Buffer([ 0xa1, 0x08, 0x03, 0x06, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04 ]))).to.equal(true);
-        });
-    });
-    describe('.encodeECParameters()', function () {
-        it('should correctly encode the known curve P-256', function () {
-            var res = asn1.encodeECParameters(asn1.namedCurve['P-256']);
-            expect(bufferEquals(res, new Buffer([ 0xa0, 0x0a, 0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07 ]))).to.equal(true);
-        });
-        it('should correctly encode the known curve P-384', function () {
-            var res = asn1.encodeECParameters(asn1.namedCurve['P-384']);
-            expect(bufferEquals(res, new Buffer([ 0xa0, 0x07, 0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x22 ]))).to.equal(true);
-        });
-        it('should correctly encode the known curve P-521', function () {
-            var res = asn1.encodeECParameters(asn1.namedCurve['P-521']);
-            expect(bufferEquals(res, new Buffer([ 0xa0, 0x07, 0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x23 ]))).to.equal(true);
-        });
-    });
     describe('.encodeInteger()', function () {
         it('should throw an error if a negative number is passed', function() {
             expect(function () { asn1.encodeInteger(-1); }).to.throw('Input must be between 0 and 2^32');
