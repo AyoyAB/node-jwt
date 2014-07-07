@@ -46,22 +46,18 @@ describe('jwk', function() {
                 'x': 'f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU',
                 'y': 'x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0',
                 'd': 'jpsQnnGQmL-YBIffH1136cspYG6-0iY7X1fCE9-E9LI'
-            }, EXPECTED_PRIVATE_KEY_ENCODING = Buffer.concat([
-                new Buffer([ 0x30, 0x77, 0x02, 0x01, 0x01, 0x04, 0x20 ]),
-                new Buffer(base64url.toBase64String(KEY.d), 'base64'),
-                new Buffer([ 0xa0, 0x0a ]),
-                asn1.namedCurve[KEY.crv],
-                new Buffer([ 0xa1, 0x44, 0x03, 0x42, 0x00, 0x04 ]),
-                new Buffer(base64url.toBase64String(KEY.x), 'base64'),
-                new Buffer(base64url.toBase64String(KEY.y), 'base64')
-            ]), EXPECTED_PUBLIC_KEY_ENCODING = Buffer.concat([
-                new Buffer([ 0x30, 0x59, 0x30, 0x13 ]),
-                asn1.algorithm['id-ecPublicKey'],
-                asn1.namedCurve[KEY.crv],
-                new Buffer([ 0x03, 0x42, 0x00, 0x04 ]),
-                new Buffer(base64url.toBase64String(KEY.x), 'base64'),
-                new Buffer(base64url.toBase64String(KEY.y), 'base64')
-            ]);
+            }, EXPECTED_PRIVATE_KEY_ENCODING = new Buffer(
+                '-----BEGIN EC PRIVATE KEY-----\n' +
+                'MHcCAQEEII6bEJ5xkJi/mASH3x9dd+nLKWBuvtImO19XwhPfhPSyoAoGCCqGSM49\n' +
+                'AwEHoUQDQgAEf83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEXH8UTNG72b\n' +
+                'focs3+257rn0s2ldbqkLJK2KRiMohYjlrQ==\n' +
+                '-----END EC PRIVATE KEY-----\n'
+            ), EXPECTED_PUBLIC_KEY_ENCODING = new Buffer(
+                '-----BEGIN PUBLIC KEY-----\n' +
+                'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEf83OJ3D2xF1Bg8vub9tLe1gHMzV7\n' +
+                '6e8Tus9uPHvRVEXH8UTNG72bfocs3+257rn0s2ldbqkLJK2KRiMohYjlrQ==\n' +
+                '-----END PUBLIC KEY-----\n'
+            );
 
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
@@ -74,22 +70,22 @@ describe('jwk', function() {
                 'x': 'AekpBQ8ST8a8VcfVOTNl353vSrDCLLJXmPk06wTjxrrjcBpXp5EOnYG_NjFZ6OvLFV1jSfS9tsz4qUxcWceqwQGk',
                 'y': 'ADSmRA43Z1DSNx_RvcLI87cdL07l6jQyyBXMoxVg_l2Th-x3S1WDhjDly79ajL4Kkd0AZMaZmh9ubmf63e3kyMj2',
                 'd': 'AY5pb7A0UFiB3RELSD64fTLOSV_jazdF7fLYyuTw8lOfRhWg6Y6rUrPAxerEzgdRhajnu0ferB0d53vM9mE15j2C'
-            }, EXPECTED_PRIVATE_KEY_ENCODING = Buffer.concat([
-                new Buffer([ 0x30, 0x81, 0xdc, 0x02, 0x01, 0x01, 0x04, 0x42 ]),
-                new Buffer(base64url.toBase64String(KEY.d), 'base64'),
-                new Buffer([ 0xa0, 0x07 ]),
-                asn1.namedCurve[KEY.crv],
-                new Buffer([ 0xa1, 0x81, 0x89, 0x03, 0x81, 0x86, 0x00, 0x04 ]),
-                new Buffer(base64url.toBase64String(KEY.x), 'base64'),
-                new Buffer(base64url.toBase64String(KEY.y), 'base64')
-            ]), EXPECTED_PUBLIC_KEY_ENCODING = Buffer.concat([
-                new Buffer([ 0x30, 0x81, 0x9b, 0x30, 0x10 ]),
-                asn1.algorithm['id-ecPublicKey'],
-                asn1.namedCurve[KEY.crv],
-                new Buffer([ 0x03, 0x81, 0x86, 0x00, 0x04 ]),
-                new Buffer(base64url.toBase64String(KEY.x), 'base64'),
-                new Buffer(base64url.toBase64String(KEY.y), 'base64')
-            ]);
+            }, EXPECTED_PRIVATE_KEY_ENCODING = new Buffer(
+                '-----BEGIN EC PRIVATE KEY-----\n' +
+                'MIHcAgEBBEIBjmlvsDRQWIHdEQtIPrh9Ms5JX+NrN0Xt8tjK5PDyU59GFaDpjqtS\n' +
+                's8DF6sTOB1GFqOe7R96sHR3ne8z2YTXmPYKgBwYFK4EEACOhgYkDgYYABAHpKQUP\n' +
+                'Ek/GvFXH1TkzZd+d70qwwiyyV5j5NOsE48a643AaV6eRDp2BvzYxWejryxVdY0n0\n' +
+                'vbbM+KlMXFnHqsEBpAA0pkQON2dQ0jcf0b3CyPO3HS9O5eo0MsgVzKMVYP5dk4fs\n' +
+                'd0tVg4Yw5cu/Woy+CpHdAGTGmZofbm5n+t3t5MjI9g==\n' +
+                '-----END EC PRIVATE KEY-----\n'
+            ), EXPECTED_PUBLIC_KEY_ENCODING = new Buffer (
+                '-----BEGIN PUBLIC KEY-----\n' +
+                'MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQB6SkFDxJPxrxVx9U5M2Xfne9KsMIs\n' +
+                'sleY+TTrBOPGuuNwGlenkQ6dgb82MVno68sVXWNJ9L22zPipTFxZx6rBAaQANKZE\n' +
+                'DjdnUNI3H9G9wsjztx0vTuXqNDLIFcyjFWD+XZOH7HdLVYOGMOXLv1qMvgqR3QBk\n' +
+                'xpmaH25uZ/rd7eTIyPY=\n' +
+                '-----END PUBLIC KEY-----\n'
+            )
 
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
