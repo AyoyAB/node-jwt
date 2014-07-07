@@ -7,8 +7,10 @@ describe('jwt', function() {
     // Test data from JWS Internet Draft example A.1
     var jwsDraftExampleA1 = {
         algorithm: jws.algorithm.HmacWithSha256,
-        // TODO: Convert raw key to 'proper' JWK once we have that handling in place.
-        key: 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow',
+        key: {
+            'kty': 'oct',
+            'k': 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
+        },
         protectedHeader: { typ: 'JWT', alg: jws.algorithm.HmacWithSha256 },
         encodedHeader: 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9',
         payload: '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}',
@@ -74,19 +76,28 @@ describe('jwt', function() {
         });
 
         it('should not validate a padded signature', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken+"1", jwsDraftExampleA1.key)).to.equal(false);
-        });
-
-        it('should not validate with a modified key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, jwsDraftExampleA1.key.substring(0, jwsDraftExampleA1.key.length - 2) + '12')).to.equal(false);
+            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken + '1', jwsDraftExampleA1.key)).to.equal(false);
         });
 
         it('should not validate with a truncated key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, jwsDraftExampleA1.key.substring(0, jwsDraftExampleA1.key.length - 2))).to.equal(false);
+            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
+                'kty': jwsDraftExampleA1.key.kty,
+                'k': jwsDraftExampleA1.key.k.substring(0, jwsDraftExampleA1.key.k.length - 2)
+            })).to.equal(false);
         });
 
         it('should not validate with a padded key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, jwsDraftExampleA1.key+"1")).to.equal(false);
+            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
+                'kty': jwsDraftExampleA1.key.kty,
+                'k': jwsDraftExampleA1.key.k + '12'
+            })).to.equal(false);
+        });
+
+        it('should not validate with a modified key', function () {
+            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
+                'kty': jwsDraftExampleA1.key.kty,
+                'k': jwsDraftExampleA1.key.k.substring(0, jwsDraftExampleA1.key.k.length - 2) + '12'
+            })).to.equal(false);
         });
 
         it('should correctly validate JWS draft example A1', function () {
