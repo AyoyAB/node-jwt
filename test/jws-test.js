@@ -14,6 +14,19 @@ describe('jws', function() {
         encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',
         encodedSignature: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
     };
+    // Test data from JWS Internet Draft example A.3
+    var jwsDraftExampleA3 = {
+        algorithm: jws.algorithm.EcdsaP256WithSha256,
+        key: {
+            'kty': 'EC',
+            'crv': 'P-256',
+            'x': 'f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU',
+            'y': 'x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0',
+            'd': 'jpsQnnGQmL-YBIffH1136cspYG6-0iY7X1fCE9-E9LI'
+        },
+        encodedHeader: 'eyJhbGciOiJFUzI1NiJ9',
+        encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ'
+    };
 
     describe('.createHmac()', function() {
         it('should correctly generate JWS draft example A1', function () {
@@ -37,6 +50,26 @@ describe('jws', function() {
                 jwsDraftExampleA1.encodedSignature);
 
             expect(isValid).to.equal(true);
+        });
+    });
+
+    describe('.createSignature()', function() {
+        it('should "correctly" generate and validate JWS draft example A3', function () {
+            var signature = jws.createSignature(
+                jwsDraftExampleA3.algorithm,
+                jwsDraftExampleA3.key,
+                jwsDraftExampleA3.encodedHeader,
+                jwsDraftExampleA3.encodedPayload);
+
+            // Remove the private key component, to make sure validation works without it.
+            delete jwsDraftExampleA3.key.d;
+
+            expect(jws.validateSignature(
+                jwsDraftExampleA3.algorithm,
+                jwsDraftExampleA3.key,
+                jwsDraftExampleA3.encodedHeader,
+                jwsDraftExampleA3.encodedPayload,
+                signature)).to.equal(true);
         });
     });
 });
