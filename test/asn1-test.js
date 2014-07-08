@@ -237,4 +237,70 @@ describe('asn1', function() {
             expect(util.bufferEquals(res, TEST_P256_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
     });
+    describe('.decodeDerObject()', function() {
+        it('should throw an error if a null Buffer is passed', function() {
+            expect(function () { asn1.decodeDerObject(null); }).to.throw('Input buffer required');
+        });
+        it('should throw an error if an empty Buffer is passed', function() {
+            expect(function () { asn1.decodeDerObject(new Buffer(0)); }).to.throw('Input buffer too short');
+        });
+        it('should throw an error if a single-byte Buffer is passed', function() {
+            expect(function () { asn1.decodeDerObject(new Buffer(1)); }).to.throw('Input buffer too short');
+        });
+        it('should throw an error if a multi-byte identifier is passed', function() {
+            // 0xDF has bits 1-15 set, signaling a multi-byte identifier.
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0xDF, 0x20, 0x01, 0x00 ])); }).to.throw('Multi-byte identifiers not supported');
+        });
+        it('should throw an error if an indefinite length object is passed', function() {
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x80, 0x00 ])); }).to.throw('Indefinite length form not supported');
+        });
+        it('should throw an error if a > 32 ^ byte object is passed', function() {
+            // This buffer claims to contain a 2^32 byte INTEGER.
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x85, 0x01, 0x00, 0x00, 0x00, 0x00 ])); }).to.throw('Content lengths greater than 2^32 bytes not supported');
+        });
+        it('should throw an error if the  buffer doesn\'t fit the length bytes', function() {
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x81 ])); }).to.throw('Length of length overflows input buffer');
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x82, 0x01 ])); }).to.throw('Length of length overflows input buffer');
+        });
+        it('should throw an error if a too small buffer is passed', function() {
+            // This buffer claims to contain a 2 byte INTEGER, and only one byte is present.
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x02, 0x00 ])); }).to.throw('Content length overflows input buffer');
+            expect(function () { asn1.decodeDerObject(new Buffer([ 0x02, 0x81, 0x80, 0x00 ])); }).to.throw('Content length overflows input buffer');
+        });
+        it('should correctly decode an ASN.1 NULL', function () {
+            var res = asn1.decodeDerObject(new Buffer([ 0x05, 0x00 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                readBytes: 2,
+                object: {
+                    identifier: 5,
+                    length: 0,
+                    contents: new Buffer(0)
+                }
+            }));
+        });
+        it('should correctly decode a single-byte ASN.1 INTEGER', function () {
+            // A zero.
+            var res = asn1.decodeDerObject(new Buffer([ 0x02, 0x01, 0x00 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                readBytes: 3,
+                object: {
+                    identifier: 2,
+                    length: 1,
+                    contents: new Buffer([ 0x00 ])
+                }
+            }));
+        });
+        it('should correctly decode a multi-byte ASN.1 INTEGER', function () {
+            // 0x100 - 256
+            var res = asn1.decodeDerObject(new Buffer([ 0x02, 0x02, 0x01, 0x00 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                readBytes: 4,
+                object: {
+                    identifier: 2,
+                    length: 2,
+                    contents: new Buffer([ 0x01, 0x00 ])
+                }
+            }));
+        });
+    });
 });
