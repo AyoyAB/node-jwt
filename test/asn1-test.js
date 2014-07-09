@@ -270,69 +270,148 @@ describe('asn1', function() {
         it('should correctly decode an ASN.1 NULL', function () {
             var res = asn1.decodeDerObject(new Buffer([ 0x05, 0x00 ]));
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
-                readBytes: 2,
-                object: {
-                    identifier: asn1.identifier.NULL,
-                    length: 0,
-                    contents: new Buffer(0)
-                }
+                identifier: asn1.identifier.NULL,
+                length: 0,
+                contents: new Buffer(0),
+                byteCount: 2
             }));
         });
         it('should correctly decode a single-byte ASN.1 INTEGER', function () {
             // A zero.
             var res = asn1.decodeDerObject(new Buffer([ 0x02, 0x01, 0x00 ]));
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
-                readBytes: 3,
-                object: {
-                    identifier: asn1.identifier.INTEGER,
-                    length: 1,
-                    contents: new Buffer([ 0x00 ])
-                }
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x00 ]),
+                byteCount: 3
             }));
         });
         it('should correctly decode a multi-byte ASN.1 INTEGER', function () {
             // 0x100
             var res = asn1.decodeDerObject(new Buffer([ 0x02, 0x02, 0x01, 0x00 ]));
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
-                readBytes: 4,
-                object: {
-                    identifier: asn1.identifier.INTEGER,
-                    length: 2,
-                    contents: new Buffer([ 0x01, 0x00 ])
-                }
+                identifier: asn1.identifier.INTEGER,
+                length: 2,
+                contents: new Buffer([ 0x01, 0x00 ]),
+                byteCount: 4
             }));
         });
         it('should correctly decode a SEQUENCE of two INTEGERs', function () {
             // 0x100
             var res = asn1.decodeDerObject(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]));
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
-                readBytes: 8,
-                object: {
-                    identifier: asn1.identifier.SEQUENCE,
-                    length: 6,
-                    contents: new Buffer([ 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ])
-                }
+                identifier: asn1.identifier.SEQUENCE,
+                length: 6,
+                contents: new Buffer([ 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]),
+                byteCount: 8
             }));
 
-            var res2 = asn1.decodeDerObject(res.object.contents);
+            var res2 = asn1.decodeDerObject(res.contents);
             expect(JSON.stringify(res2)).to.equal(JSON.stringify({
-                readBytes: 3,
-                object: {
-                    identifier: asn1.identifier.INTEGER,
-                    length: 1,
-                    contents: new Buffer([ 0x00 ])
-                }
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x00 ]),
+                byteCount: 3
             }));
 
-            var res3 = asn1.decodeDerObject(res.object.contents, res2.readBytes);
+            var res3 = asn1.decodeDerObject(res.contents, res2.byteCount);
             expect(JSON.stringify(res3)).to.equal(JSON.stringify({
-                readBytes: 3,
-                object: {
-                    identifier: asn1.identifier.INTEGER,
-                    length: 1,
-                    contents: new Buffer([ 0x01 ])
-                }
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x01 ]),
+                byteCount: 3
             }));
+        });
+    });
+    describe('.decodeSpecificDerObject()', function() {
+        it('should throw an error if asked to parse an OCTET STRING as an INTEGER', function () {
+            expect(function () { asn1.decodeSpecificDerObject(asn1.identifier.INTEGER, new Buffer([ 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should correctly parse an INTEGER', function () {
+            var res = asn1.decodeSpecificDerObject(asn1.identifier.INTEGER, new Buffer([ 0x02, 0x01, 0x00 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x00 ]),
+                byteCount: 3
+            }));
+        });
+    });
+    describe('.decodeDerSequence()', function() {
+        it('should throw an error if asked to parse an OCTET STRING', function () {
+            expect(function () { asn1.decodeDerSequence(new Buffer([ 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should correctly parse a SEQUENCE of two INTEGERs', function () {
+            var res = asn1.decodeDerSequence(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                identifier: asn1.identifier.SEQUENCE,
+                length: 6,
+                contents: new Buffer([ 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]),
+                byteCount: 8
+            }));
+
+            var res2 = asn1.decodeDerObject(res.contents);
+            expect(JSON.stringify(res2)).to.equal(JSON.stringify({
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x00 ]),
+                byteCount: 3
+            }));
+
+            var res3 = asn1.decodeDerObject(res.contents, res2.byteCount);
+            expect(JSON.stringify(res3)).to.equal(JSON.stringify({
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x01 ]),
+                byteCount: 3
+            }));
+        });
+    });
+    describe('.decodeDerInteger()', function() {
+        it('should throw an error if asked to parse an OCTET STRING', function () {
+            expect(function () { asn1.decodeDerInteger(new Buffer([ 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should correctly parse an INTEGER', function () {
+            var res = asn1.decodeDerInteger(new Buffer([ 0x02, 0x01, 0x00 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                identifier: asn1.identifier.INTEGER,
+                length: 1,
+                contents: new Buffer([ 0x00 ]),
+                byteCount: 3
+            }));
+        });
+    });
+    describe('.decodeDerEcdsaSignature()', function() {
+        it('should throw an error if asked to parse an OCTET STRING', function () {
+            expect(function () { asn1.decodeDerEcdsaSignature(new Buffer([ 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should throw an error if asked to parse a SEQUENCE containing an OCTET STRING', function () {
+            expect(function () { asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x03, 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should throw an error if asked to parse a SEQUENCE containing an INTEGER and an OCTET STRING', function () {
+            expect(function () { asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x04, 0x01, 0x00 ])); }).to.throw('Unexpected object identifier: 4');
+        });
+        it('should throw an error if asked to parse a SEQUENCE containing just one INTEGER', function () {
+            expect(function () { asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x03, 0x02, 0x01, 0x00 ])); }).to.throw('Input buffer too short');
+        });
+        it('should correctly parse a SEQUENCE of two single-byte INTEGERs', function () {
+            // 0x00 & 0x01
+            var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]));
+            expect(util.bufferEquals(res.r, new Buffer([ 0 ]))).to.equal(true);
+            expect(util.bufferEquals(res.s, new Buffer([ 1 ]))).to.equal(true);
+        });
+        it('should correctly parse a SEQUENCE of two multi-byte INTEGERs', function () {
+            // 0x0001 & 0x0203
+            var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]));
+            expect(util.bufferEquals(res.r, new Buffer([ 0, 1 ]))).to.equal(true);
+            expect(util.bufferEquals(res.s, new Buffer([ 2, 3 ]))).to.equal(true);
+        });
+        it('should correctly parse a SEQUENCE of three single-byte INTEGERs, ignoring the third', function () {
+            // 0x00, 0x01 & 0x02
+            // TODO: Should this be an error?
+            var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x09, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01, 0x02, 0x01, 0x02 ]));
+            expect(util.bufferEquals(res.r, new Buffer([ 0 ]))).to.equal(true);
+            expect(util.bufferEquals(res.s, new Buffer([ 1 ]))).to.equal(true);
         });
     });
 });
