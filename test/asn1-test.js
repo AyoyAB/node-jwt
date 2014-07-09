@@ -119,19 +119,19 @@ describe('asn1', function() {
             expect(util.bufferEquals(res, new Buffer([ 0x03, 0x03, 0x00, 0xf0, 0x00 ]))).to.equal(true);
         });
     });
-    describe('.encodeContentSpecificValue()', function() {
+    describe('.encodeContextSpecificValue()', function() {
         it('should throw an error if a negative tag is passed', function () {
-            expect(function () { asn1.encodeContentSpecificValue(new Buffer(0), -1); }).to.throw('tag must be between 0 and 31');
+            expect(function () { asn1.encodeContextSpecificValue(new Buffer(0), -1); }).to.throw('tag must be between 0 and 31');
         });
         it('should throw an error if a tag > 31 is passed', function () {
-            expect(function () { asn1.encodeContentSpecificValue(new Buffer(0), 32); }).to.throw('tag must be between 0 and 31');
+            expect(function () { asn1.encodeContextSpecificValue(new Buffer(0), 32); }).to.throw('tag must be between 0 and 31');
         });
         it('should correctly encode a single byte bit string', function () {
-            var res = asn1.encodeContentSpecificValue(new Buffer([ 0x03, 0x02, 0x00, 0x01 ]), 0);
+            var res = asn1.encodeContextSpecificValue(new Buffer([ 0x03, 0x02, 0x00, 0x01 ]), 0);
             expect(util.bufferEquals(res, new Buffer([ 0xa0, 0x04, 0x03, 0x02, 0x00, 0x01 ]))).to.equal(true);
         });
         it('should correctly encode a two byte bit string', function () {
-            var res = asn1.encodeContentSpecificValue(new Buffer([ 0x03, 0x03, 0x00, 0x00, 0x01 ]), 1);
+            var res = asn1.encodeContextSpecificValue(new Buffer([ 0x03, 0x03, 0x00, 0x00, 0x01 ]), 1);
             expect(util.bufferEquals(res, new Buffer([ 0xa1, 0x05, 0x03, 0x03, 0x00, 0x00, 0x01 ]))).to.equal(true);
         });
     });
@@ -272,7 +272,7 @@ describe('asn1', function() {
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
                 readBytes: 2,
                 object: {
-                    identifier: 5,
+                    identifier: asn1.identifier.NULL,
                     length: 0,
                     contents: new Buffer(0)
                 }
@@ -284,21 +284,53 @@ describe('asn1', function() {
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
                 readBytes: 3,
                 object: {
-                    identifier: 2,
+                    identifier: asn1.identifier.INTEGER,
                     length: 1,
                     contents: new Buffer([ 0x00 ])
                 }
             }));
         });
         it('should correctly decode a multi-byte ASN.1 INTEGER', function () {
-            // 0x100 - 256
+            // 0x100
             var res = asn1.decodeDerObject(new Buffer([ 0x02, 0x02, 0x01, 0x00 ]));
             expect(JSON.stringify(res)).to.equal(JSON.stringify({
                 readBytes: 4,
                 object: {
-                    identifier: 2,
+                    identifier: asn1.identifier.INTEGER,
                     length: 2,
                     contents: new Buffer([ 0x01, 0x00 ])
+                }
+            }));
+        });
+        it('should correctly decode a SEQUENCE of two INTEGERs', function () {
+            // 0x100
+            var res = asn1.decodeDerObject(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]));
+            expect(JSON.stringify(res)).to.equal(JSON.stringify({
+                readBytes: 8,
+                object: {
+                    identifier: asn1.identifier.SEQUENCE,
+                    length: 6,
+                    contents: new Buffer([ 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ])
+                }
+            }));
+
+            var res2 = asn1.decodeDerObject(res.object.contents);
+            expect(JSON.stringify(res2)).to.equal(JSON.stringify({
+                readBytes: 3,
+                object: {
+                    identifier: asn1.identifier.INTEGER,
+                    length: 1,
+                    contents: new Buffer([ 0x00 ])
+                }
+            }));
+
+            var res3 = asn1.decodeDerObject(res.object.contents, res2.readBytes);
+            expect(JSON.stringify(res3)).to.equal(JSON.stringify({
+                readBytes: 3,
+                object: {
+                    identifier: asn1.identifier.INTEGER,
+                    length: 1,
+                    contents: new Buffer([ 0x01 ])
                 }
             }));
         });
