@@ -6,12 +6,12 @@ var base64url   = require('../lib/base64url');
 describe('jwt', function() {
     // Test data from JWS Internet Draft example A.1
     var jwsDraftExampleA1 = {
-        algorithm: jws.algorithm.HmacWithSha256,
+        algorithm: jws.signatureAlgorithm.HmacWithSha256,
         key: {
             'kty': 'oct',
             'k': 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
         },
-        protectedHeader: { typ: 'JWT', alg: jws.algorithm.HmacWithSha256 },
+        protectedHeader: { typ: 'JWT', alg: jws.signatureAlgorithm.HmacWithSha256 },
         encodedHeader: 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9',
         payload: '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}',
         encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',

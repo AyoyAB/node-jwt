@@ -5,7 +5,7 @@ var base64url   = require('../lib/base64url');
 describe('jws', function() {
     // Test data from JWS Internet Draft example A.1
     var jwsDraftExampleA1 = {
-        algorithm: jws.algorithm.HmacWithSha256,
+        algorithm: jws.signatureAlgorithm.HmacWithSha256,
         key: {
             'kty': 'oct',
             'k': 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
@@ -16,7 +16,7 @@ describe('jws', function() {
     };
     // Test data from JWS Internet Draft example A.3
     var jwsDraftExampleA3 = {
-        algorithm: jws.algorithm.EcdsaP256WithSha256,
+        algorithm: jws.signatureAlgorithm.EcdsaP256WithSha256,
         key: {
             'kty': 'EC',
             'crv': 'P-256',
