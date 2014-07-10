@@ -237,6 +237,20 @@ describe('asn1', function() {
             expect(util.bufferEquals(res, TEST_P256_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
     });
+    describe('.encodeDerEcdsaSignature()', function() {
+        it('should encode a dummy signature with two single-byte INTEGERs correctly', function () {
+            var res = asn1.encodeEcdsaSignature(new Buffer([ 0 ]), new Buffer([ 1 ]));
+            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]))).to.equal(true);
+        });
+        it('should encode a dummy signature with two multi-byte INTEGERs correctly', function () {
+            var res = asn1.encodeEcdsaSignature(new Buffer([ 0, 1 ]), new Buffer([ 2, 3 ]));
+            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]))).to.equal(true);
+        });
+        it('should not pad negative INTEGERs with leading zeros', function () {
+            var res = asn1.encodeEcdsaSignature(new Buffer([ 0x80 ]), new Buffer([ 0x81 ]));
+            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x80, 0x02, 0x01, 0x81 ]))).to.equal(true);
+        });
+    });
     describe('.decodeDerObject()', function() {
         it('should throw an error if a null Buffer is passed', function() {
             expect(function () { asn1.decodeDerObject(null); }).to.throw('Input buffer required');

@@ -25,7 +25,8 @@ describe('jws', function() {
             'd': 'jpsQnnGQmL-YBIffH1136cspYG6-0iY7X1fCE9-E9LI'
         },
         encodedHeader: 'eyJhbGciOiJFUzI1NiJ9',
-        encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ'
+        encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',
+        encodedSignature: 'DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q'
     };
 
     describe('.createHmac()', function() {
@@ -70,6 +71,17 @@ describe('jws', function() {
                 jwsDraftExampleA3.encodedHeader,
                 jwsDraftExampleA3.encodedPayload,
                 signature)).to.equal(true);
+        });
+    });
+
+    describe('.createSignature()', function() {
+        it('should "correctly" validate the signature in JWS draft example A3', function () {
+            expect(jws.validateSignature(
+                jwsDraftExampleA3.algorithm,
+                jwsDraftExampleA3.key,
+                jwsDraftExampleA3.encodedHeader,
+                jwsDraftExampleA3.encodedPayload,
+                jwsDraftExampleA3.encodedSignature)).to.equal(true);
         });
     });
 });
