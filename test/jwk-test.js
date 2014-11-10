@@ -85,7 +85,7 @@ describe('jwk', function() {
                 'DjdnUNI3H9G9wsjztx0vTuXqNDLIFcyjFWD+XZOH7HdLVYOGMOXLv1qMvgqR3QBk\n' +
                 'xpmaH25uZ/rd7eTIyPY=\n' +
                 '-----END PUBLIC KEY-----\n'
-            )
+            );
 
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
