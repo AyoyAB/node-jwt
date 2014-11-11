@@ -102,21 +102,8 @@ describe('jws', function() {
                 jwsDraftExampleA3.encodedPayload,
                 signature)).to.equal(true);
         });
-    });
 
-    describe('.createSignature()', function() {
-        it('should "correctly" validate the signature in JWS draft example A3', function () {
-            expect(jws.validateSignature(
-                jwsDraftExampleA3.algorithm,
-                jwsDraftExampleA3.key,
-                jwsDraftExampleA3.encodedHeader,
-                jwsDraftExampleA3.encodedPayload,
-                jwsDraftExampleA3.encodedSignature)).to.equal(true);
-        });
-    });
-
-    /*
-    describe('.createSignature()', function() {
+        /*
         it('should "correctly" generate and validate JWS draft example A4', function () {
             var signature = jws.createSignature(
                 jwsDraftExampleA4.algorithm,
@@ -134,11 +121,20 @@ describe('jws', function() {
                 jwsDraftExampleA4.encodedPayload,
                 signature)).to.equal(true);
         });
+        */
     });
-    */
 
-    describe('.createSignature()', function() {
-        it('should "correctly" validate the signature in JWS draft example A4', function () {
+    describe('.validateSignature()', function() {
+        it('should correctly validate JWS draft example A3', function () {
+            expect(jws.validateSignature(
+                jwsDraftExampleA3.algorithm,
+                jwsDraftExampleA3.key,
+                jwsDraftExampleA3.encodedHeader,
+                jwsDraftExampleA3.encodedPayload,
+                jwsDraftExampleA3.encodedSignature)).to.equal(true);
+        });
+
+        it('should correctly validate JWS draft example A4', function () {
             delete jwsDraftExampleA4.key.d;
 
             expect(jws.validateSignature(
@@ -148,10 +144,8 @@ describe('jws', function() {
                 jwsDraftExampleA4.encodedPayload,
                 jwsDraftExampleA4.encodedSignature)).to.equal(true);
         });
-    });
 
-    describe('.createSignature()', function() {
-        it('should "correctly" validate the signature in the Jose Cookbook draft example 4.3', function () {
+        it('should correctly validate Jose Cookbook draft example 4.3', function () {
             delete cookbookExample43.key.d;
 
             expect(jws.validateSignature(
