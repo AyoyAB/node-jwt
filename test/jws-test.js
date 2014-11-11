@@ -103,7 +103,6 @@ describe('jws', function() {
                 signature)).to.equal(true);
         });
 
-        /*
         it('should "correctly" generate and validate JWS draft example A4', function () {
             var signature = jws.createSignature(
                 jwsDraftExampleA4.algorithm,
@@ -121,7 +120,24 @@ describe('jws', function() {
                 jwsDraftExampleA4.encodedPayload,
                 signature)).to.equal(true);
         });
-        */
+
+        it('should "correctly" generate and validate Jose Cookbook draft example 4.3', function () {
+            var signature = jws.createSignature(
+                cookbookExample43.algorithm,
+                cookbookExample43.key,
+                cookbookExample43.encodedHeader,
+                cookbookExample43.encodedPayload);
+
+            // Remove the private key component, to make sure validation works without it.
+            delete cookbookExample43.key.d;
+
+            expect(jws.validateSignature(
+                cookbookExample43.algorithm,
+                cookbookExample43.key,
+                cookbookExample43.encodedHeader,
+                cookbookExample43.encodedPayload,
+                signature)).to.equal(true);
+        });
     });
 
     describe('.validateSignature()', function() {
