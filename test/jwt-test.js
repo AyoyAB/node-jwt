@@ -20,6 +20,59 @@ describe('jwt', function() {
             'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.' +
             'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
     };
+    // Test data from JWS Internet Draft example A.3
+    var jwsDraftExampleA3 = {
+        algorithm: jws.signatureAlgorithm.EcdsaP256WithSha256,
+        key: {
+            'kty': 'EC',
+            'crv': 'P-256',
+            'x': 'f83OJ3D2xF1Bg8vub9tLe1gHMzV76e8Tus9uPHvRVEU',
+            'y': 'x_FEzRu9m36HLN_tue659LNpXW6pCyStikYjKIWI5a0',
+            'd': 'jpsQnnGQmL-YBIffH1136cspYG6-0iY7X1fCE9-E9LI'
+        },
+        encodedHeader: 'eyJhbGciOiJFUzI1NiJ9',
+        encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',
+        encodedSignature: 'DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q',
+        encodedToken: 'eyJhbGciOiJFUzI1NiJ9.' +
+            'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.' +
+            'DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q'
+    };
+    // Test data from JWS Internet Draft example A.4
+    var jwsDraftExampleA4 = {
+        algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
+        key: {
+            'kty': 'EC',
+            'crv': 'P-521',
+            'x': 'AekpBQ8ST8a8VcfVOTNl353vSrDCLLJXmPk06wTjxrrjcBpXp5EOnYG_NjFZ6OvLFV1jSfS9tsz4qUxcWceqwQGk',
+            'y': 'ADSmRA43Z1DSNx_RvcLI87cdL07l6jQyyBXMoxVg_l2Th-x3S1WDhjDly79ajL4Kkd0AZMaZmh9ubmf63e3kyMj2',
+            'd': 'AY5pb7A0UFiB3RELSD64fTLOSV_jazdF7fLYyuTw8lOfRhWg6Y6rUrPAxerEzgdRhajnu0ferB0d53vM9mE15j2C'
+        },
+        encodedHeader: 'eyJhbGciOiJFUzUxMiJ9',
+        encodedPayload: 'UGF5bG9hZA',
+        encodedSignature: 'AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZqwqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8KpEHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn',
+        encodedToken: 'eyJhbGciOiJFUzUxMiJ9.' +
+            'UGF5bG9hZA.' +
+            'AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZqwqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8KpEHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn'
+    };
+    // Test data from JOSE Cookbook Internet Draft chapter 4.3
+    var cookbookExample43 = {
+        algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
+        key: {
+            'kty': 'EC',
+            'kid': 'bilbo.baggins@hobbiton.example',
+            'use': 'sig',
+            'crv': 'P-521',
+            'x': 'AHKZLLOsCOzz5cY97ewNUajB957y-C-U88c3v13nmGZx6sYl_oJXu9A5RkTKqjqvjyekWF-7ytDyRXYgCF5cj0Kt',
+            'y': 'AdymlHvOiLxXkEhayXQnNCvDX4h9htZaCJN34kfmC6pV5OhQHiraVySsUdaQkAgDPrwQrJmbnX9cwlGfP-HqHZR1',
+            'd': 'AAhRON2r9cqXX1hg-RoI6R1tX5p2rUAYdmpHZoC1XNM56KtscrX6zbKipQrCW9CGZH3T4ubpnoTKLDYJ_fF3_rJt'
+        },
+        encodedHeader: 'eyJhbGciOiJFUzUxMiIsImtpZCI6ImJpbGJvLmJhZ2dpbnNAaG9iYml0b24uZXhhbXBsZSJ9',
+        encodedPayload: 'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4',
+        encodedSignature: 'AE_R_YZCChjn4791jSQCrdPZCNYqHXCTZH0-JZGYNlaAjP2kqaluUIIUnC9qvbu9Plon7KRTzoNEuT4Va2cmL1eJAQy3mtPBu_u_sDDyYjnAMDxXPn7XrT0lw-kvAD890jl8e2puQens_IEKBpHABlsbEPX6sFY8OcGDqoRuBomu9xQ2',
+        encodedToken: 'eyJhbGciOiJFUzUxMiIsImtpZCI6ImJpbGJvLmJhZ2dpbnNAaG9iYml0b24uZXhhbXBsZSJ9.' +
+            'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4.' +
+            'AE_R_YZCChjn4791jSQCrdPZCNYqHXCTZH0-JZGYNlaAjP2kqaluUIIUnC9qvbu9Plon7KRTzoNEuT4Va2cmL1eJAQy3mtPBu_u_sDDyYjnAMDxXPn7XrT0lw-kvAD890jl8e2puQens_IEKBpHABlsbEPX6sFY8OcGDqoRuBomu9xQ2'
+    };
 
     describe('.encodeJws()', function() {
         it('should complain if no algorithm is specified', function() {
@@ -102,6 +155,18 @@ describe('jwt', function() {
 
         it('should correctly validate JWS draft example A1', function () {
             expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, jwsDraftExampleA1.key)).to.equal(true);
+        });
+
+        it('should correctly validate JWS draft example A3', function () {
+            expect(jwt.validateJwt(jwsDraftExampleA3.encodedToken, jwsDraftExampleA3.key)).to.equal(true);
+        });
+
+        it('should correctly validate JWS draft example A4', function () {
+            expect(jwt.validateJwt(jwsDraftExampleA4.encodedToken, jwsDraftExampleA4.key)).to.equal(true);
+        });
+
+        it('should correctly validate JOSE Cookbook draft example 4.3', function () {
+            expect(jwt.validateJwt(cookbookExample43.encodedToken, cookbookExample43.key)).to.equal(true);
         });
     });
 });
