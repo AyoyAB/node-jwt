@@ -37,5 +37,6 @@
   "bugs": {
     "url": "https://github.com/AyoyAB/node-jwt/issues"
   },
-  "homepage": "https://github.com/AyoyAB/node-jwt"
+  "homepage": "https://github.com/AyoyAB/node-jwt",
+  "private": true
 }
