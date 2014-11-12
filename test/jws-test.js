@@ -92,9 +92,6 @@ describe('jws', function() {
                 jwsDraftExampleA3.encodedHeader,
                 jwsDraftExampleA3.encodedPayload);
 
-            // Remove the private key component, to make sure validation works without it.
-            delete jwsDraftExampleA3.key.d;
-
             expect(jws.validateSignature(
                 jwsDraftExampleA3.algorithm,
                 jwsDraftExampleA3.key,
@@ -110,9 +107,6 @@ describe('jws', function() {
                 jwsDraftExampleA4.encodedHeader,
                 jwsDraftExampleA4.encodedPayload);
 
-            // Remove the private key component, to make sure validation works without it.
-            delete jwsDraftExampleA4.key.d;
-
             expect(jws.validateSignature(
                 jwsDraftExampleA4.algorithm,
                 jwsDraftExampleA4.key,
@@ -127,9 +121,6 @@ describe('jws', function() {
                 cookbookExample43.key,
                 cookbookExample43.encodedHeader,
                 cookbookExample43.encodedPayload);
-
-            // Remove the private key component, to make sure validation works without it.
-            delete cookbookExample43.key.d;
 
             expect(jws.validateSignature(
                 cookbookExample43.algorithm,
@@ -151,8 +142,6 @@ describe('jws', function() {
         });
 
         it('should correctly validate JWS draft example A4', function () {
-            delete jwsDraftExampleA4.key.d;
-
             expect(jws.validateSignature(
                 jwsDraftExampleA4.algorithm,
                 jwsDraftExampleA4.key,
@@ -162,8 +151,6 @@ describe('jws', function() {
         });
 
         it('should correctly validate Jose Cookbook draft example 4.3', function () {
-            delete cookbookExample43.key.d;
-
             expect(jws.validateSignature(
                 cookbookExample43.algorithm,
                 cookbookExample43.key,
