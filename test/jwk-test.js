@@ -60,6 +60,7 @@ describe('jwk', function() {
             );
 
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
+            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY, { "public": true }), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
@@ -88,6 +89,7 @@ describe('jwk', function() {
             );
 
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
+            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY, { "public": true }), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
             expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
