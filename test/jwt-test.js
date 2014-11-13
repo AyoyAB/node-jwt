@@ -54,6 +54,13 @@ describe('jwt', function() {
             'UGF5bG9hZA.' +
             'AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZqwqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8KpEHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn'
     };
+    // Test data from JWS Internet Draft example A.5
+    var jwsDraftExampleA5 = {
+        protectedHeader: { alg: jws.signatureAlgorithm.None },
+        payload: '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}',
+        encodedToken: 'eyJhbGciOiJub25lIn0.' +
+            'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.'
+    };
     // Test data from JOSE Cookbook Internet Draft chapter 4.3
     var cookbookExample43 = {
         algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
@@ -80,7 +87,7 @@ describe('jwt', function() {
         });
 
         it('should complain if an invalid algorithm is specified', function() {
-            expect(function() { jwt.encodeJwt({ typ: 'JWT', alg: 'ABC123' }, jwsDraftExampleA1.payload, jwsDraftExampleA1.key); }).to.throw('Unsupported algorithm: ABC123');
+            expect(function() { jwt.encodeJwt({ typ: 'JWT', alg: 'ABC123' }, jwsDraftExampleA1.payload, jwsDraftExampleA1.key); }).to.throw('Unknown alg value in token header: ABC123');
         });
 
         it('should correctly generate JWS draft example A1', function () {
@@ -98,6 +105,12 @@ describe('jwt', function() {
 
             var expectedEncodedPayload = base64url.fromBase64String(new Buffer(jwsDraftExampleA1.payload).toString('base64'));
             expect(expectedEncodedPayload).to.equal(encodedPayload);
+        });
+
+        it('should correctly generate JWS draft example A5', function () {
+            var encodedToken = jwt.encodeJwt(jwsDraftExampleA5.protectedHeader, jwsDraftExampleA5.payload);
+
+            expect(jwsDraftExampleA5.encodedToken).to.equal(encodedToken);
         });
     });
 
@@ -163,6 +176,10 @@ describe('jwt', function() {
 
         it('should correctly validate JWS draft example A4', function () {
             expect(jwt.validateJwt(jwsDraftExampleA4.encodedToken, jwsDraftExampleA4.key)).to.equal(true);
+        });
+
+        it('should correctly validate JWS draft example A5', function () {
+            expect(jwt.validateJwt(jwsDraftExampleA5.encodedToken)).to.equal(true);
         });
 
         it('should correctly validate JOSE Cookbook draft example 4.3', function () {
