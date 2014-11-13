@@ -73,15 +73,38 @@ describe('jwt', function() {
             'y': 'AdymlHvOiLxXkEhayXQnNCvDX4h9htZaCJN34kfmC6pV5OhQHiraVySsUdaQkAgDPrwQrJmbnX9cwlGfP-HqHZR1',
             'd': 'AAhRON2r9cqXX1hg-RoI6R1tX5p2rUAYdmpHZoC1XNM56KtscrX6zbKipQrCW9CGZH3T4ubpnoTKLDYJ_fF3_rJt'
         },
+        protectedHeader: { "alg": "ES512", "kid": "bilbo.baggins@hobbiton.example" },
         encodedHeader: 'eyJhbGciOiJFUzUxMiIsImtpZCI6ImJpbGJvLmJhZ2dpbnNAaG9iYml0b24uZXhhbXBsZSJ9',
+        // NB: We'll just base64url-decode the encoded payload instead...
+        payload: 'It\xe2\x80\x99s a dangerous business, Frodo, going out your door. You step onto the road, and if you don\'t keep your feet, there\xe2\x80\x99s no knowing where you might be swept off to.',
         encodedPayload: 'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4',
         encodedSignature: 'AE_R_YZCChjn4791jSQCrdPZCNYqHXCTZH0-JZGYNlaAjP2kqaluUIIUnC9qvbu9Plon7KRTzoNEuT4Va2cmL1eJAQy3mtPBu_u_sDDyYjnAMDxXPn7XrT0lw-kvAD890jl8e2puQens_IEKBpHABlsbEPX6sFY8OcGDqoRuBomu9xQ2',
         encodedToken: 'eyJhbGciOiJFUzUxMiIsImtpZCI6ImJpbGJvLmJhZ2dpbnNAaG9iYml0b24uZXhhbXBsZSJ9.' +
             'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4.' +
             'AE_R_YZCChjn4791jSQCrdPZCNYqHXCTZH0-JZGYNlaAjP2kqaluUIIUnC9qvbu9Plon7KRTzoNEuT4Va2cmL1eJAQy3mtPBu_u_sDDyYjnAMDxXPn7XrT0lw-kvAD890jl8e2puQens_IEKBpHABlsbEPX6sFY8OcGDqoRuBomu9xQ2'
     };
+    // Test data from JOSE Cookbook Internet Draft chapter 4.4
+    var cookbookExample44 = {
+        algorithm: jws.signatureAlgorithm.HmacWithSha256,
+        key: {
+            "kty": "oct",
+            "kid": "018c0ae5-4d9b-471b-bfd6-eef314bc7037",
+            "use": "sig",
+            "alg": "HS256",
+            "k": "hJtXIZ2uSN5kbQfbtTNWbpdmhkV8FJG-Onbc6mxCcYg"
+        },
+        protectedHeader: { "alg": "HS256", "kid": "018c0ae5-4d9b-471b-bfd6-eef314bc7037" },
+        encodedHeader: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IjAxOGMwYWU1LTRkOWItNDcxYi1iZmQ2LWVlZjMxNGJjNzAzNyJ9',
+        // NB: We'll just base64url-decode the encoded payload instead...
+        payload: 'It\xe2\x80\x99s a dangerous business, Frodo, going out your door. You step onto the road, and if you don\'t keep your feet, there\xe2\x80\x99s no knowing where you might be swept off to.',
+        encodedPayload: 'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4',
+        encodedSignature: 's0h6KThzkfBBBkLspW1h84VsJZFTsPPqMDA7g1Md7p0',
+        encodedToken: 'eyJhbGciOiJIUzI1NiIsImtpZCI6IjAxOGMwYWU1LTRkOWItNDcxYi1iZmQ2LWVlZjMxNGJjNzAzNyJ9.' +
+            'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4.' +
+            's0h6KThzkfBBBkLspW1h84VsJZFTsPPqMDA7g1Md7p0'
+    };
 
-    describe('.encodeJws()', function() {
+    describe('.encodeJwt()', function() {
         it('should complain if no algorithm is specified', function() {
             expect(function() { jwt.encodeJwt({ typ: 'JWT' }, jwsDraftExampleA1.payload, jwsDraftExampleA1.key); }).to.throw('alg parameter must be present in header');
         });
@@ -112,9 +135,25 @@ describe('jwt', function() {
 
             expect(jwsDraftExampleA5.encodedToken).to.equal(encodedToken);
         });
+
+        it('should "correctly" generate JOSE Cookbook draft example 4.3', function () {
+            var encodedToken = jwt.encodeJwt(cookbookExample43.protectedHeader,
+                new Buffer(base64url.toBase64String(cookbookExample43.encodedPayload), 'base64').toString(),
+                cookbookExample43.key);
+
+            expect(jwt.validateJwt(encodedToken, cookbookExample43.key)).to.equal(true);
+        });
+
+        it('should correctly generate JOSE Cookbook draft example 4.4', function () {
+            var encodedToken = jwt.encodeJwt(cookbookExample44.protectedHeader,
+                new Buffer(base64url.toBase64String(cookbookExample44.encodedPayload), 'base64').toString(),
+                cookbookExample44.key);
+
+            expect(cookbookExample44.encodedToken).to.equal(encodedToken);
+        });
     });
 
-    describe('.validateJws()', function() {
+    describe('.validateJwt()', function() {
         it('should complain if less than three fields are present', function () {
             expect(function () {
                 jwt.validateJwt('aaaa.bbbb', jwsDraftExampleA1.key);
@@ -184,6 +223,10 @@ describe('jwt', function() {
 
         it('should correctly validate JOSE Cookbook draft example 4.3', function () {
             expect(jwt.validateJwt(cookbookExample43.encodedToken, cookbookExample43.key)).to.equal(true);
+        });
+
+        it('should correctly validate JOSE Cookbook draft example 4.4', function () {
+            expect(jwt.validateJwt(cookbookExample44.encodedToken, cookbookExample44.key)).to.equal(true);
         });
     });
 });
