@@ -1,6 +1,5 @@
 var expect = require('chai').expect;
 var asn1 = require('../lib/asn1');
-var util = require('./util');
 
 describe('asn1', function() {
     var TEST_P256_KEY_DATA = {
@@ -41,43 +40,43 @@ describe('asn1', function() {
         });
         it('should encode 0 length using short form', function() {
             var res = asn1.encodeLengthBytes(0);
-            expect(util.bufferEquals(res, new Buffer([ 0 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0 ]))).to.equal(true);
         });
         it('should encode 0x7f length using short form', function() {
             var res = asn1.encodeLengthBytes(0x7f);
-            expect(util.bufferEquals(res, new Buffer([ 0x7f ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x7f ]))).to.equal(true);
         });
         it('should encode 0x80 length using single-byte long form', function() {
             var res = asn1.encodeLengthBytes(0x80);
-            expect(util.bufferEquals(res, new Buffer([ 0x81, 0x80 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x81, 0x80 ]))).to.equal(true);
         });
         it('should encode 0xff length using single-byte long form', function() {
             var res = asn1.encodeLengthBytes(0xff);
-            expect(util.bufferEquals(res, new Buffer([ 0x81, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x81, 0xff ]))).to.equal(true);
         });
         it('should encode 0x100 length using two byte long form', function() {
             var res = asn1.encodeLengthBytes(0x100);
-            expect(util.bufferEquals(res, new Buffer([ 0x82, 0x01, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x82, 0x01, 0x00 ]))).to.equal(true);
         });
         it('should encode 0xffff length using two byte long form', function() {
             var res = asn1.encodeLengthBytes(0xffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x82, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x82, 0xff, 0xff ]))).to.equal(true);
         });
         it('should encode 0x10000 length using three byte long form', function() {
             var res = asn1.encodeLengthBytes(0x10000);
-            expect(util.bufferEquals(res, new Buffer([ 0x83, 0x01, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x83, 0x01, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0xffffff length using three byte long form', function() {
             var res = asn1.encodeLengthBytes(0xffffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x83, 0xff, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x83, 0xff, 0xff, 0xff ]))).to.equal(true);
         });
         it('should encode 0x1000000 length using four byte long form', function() {
             var res = asn1.encodeLengthBytes(0x1000000);
-            expect(util.bufferEquals(res, new Buffer([ 0x84, 0x01, 0x00, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x84, 0x01, 0x00, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0xffffffff length using four byte long form', function() {
             var res = asn1.encodeLengthBytes(0xffffffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x84, 0xff, 0xff, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x84, 0xff, 0xff, 0xff, 0xff ]))).to.equal(true);
         });
         it('should throw an error if a > 32-bit value is passed', function () {
             expect(function () { asn1.encodeLengthBytes(0xffffffff + 1); }).to.throw('Lengths > 0xffffffff not supported');
@@ -92,31 +91,31 @@ describe('asn1', function() {
         });
         it('should correctly encode a 1-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0 ]), 7);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x02, 0x07, 0xf0 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x02, 0x07, 0xf0 ]))).to.equal(true);
         });
         it('should correctly encode a 7-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0 ]), 1);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x02, 0x01, 0xf0 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x02, 0x01, 0xf0 ]))).to.equal(true);
         });
         it('should correctly encode an 8-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0 ]), 0);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x02, 0x00, 0xf0 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x02, 0x00, 0xf0 ]))).to.equal(true);
         });
         it('should correctly encode an 9-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0, 0x00 ]), 7);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x03, 0x07, 0xf0, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x03, 0x07, 0xf0, 0x00 ]))).to.equal(true);
         });
         it('should correctly encode an 9-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0, 0x00 ]), 7);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x03, 0x07, 0xf0, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x03, 0x07, 0xf0, 0x00 ]))).to.equal(true);
         });
         it('should correctly encode an 15-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0, 0x00 ]), 1);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x03, 0x01, 0xf0, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x03, 0x01, 0xf0, 0x00 ]))).to.equal(true);
         });
         it('should correctly encode an 16-bit string', function () {
             var res = asn1.encodeBitString(new Buffer([ 0xf0, 0x00 ]), 0);
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x03, 0x00, 0xf0, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x03, 0x00, 0xf0, 0x00 ]))).to.equal(true);
         });
     });
     describe('.encodeContextSpecificValue()', function() {
@@ -128,11 +127,11 @@ describe('asn1', function() {
         });
         it('should correctly encode a single byte bit string', function () {
             var res = asn1.encodeContextSpecificValue(new Buffer([ 0x03, 0x02, 0x00, 0x01 ]), 0);
-            expect(util.bufferEquals(res, new Buffer([ 0xa0, 0x04, 0x03, 0x02, 0x00, 0x01 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0xa0, 0x04, 0x03, 0x02, 0x00, 0x01 ]))).to.equal(true);
         });
         it('should correctly encode a two byte bit string', function () {
             var res = asn1.encodeContextSpecificValue(new Buffer([ 0x03, 0x03, 0x00, 0x00, 0x01 ]), 1);
-            expect(util.bufferEquals(res, new Buffer([ 0xa1, 0x05, 0x03, 0x03, 0x00, 0x00, 0x01 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0xa1, 0x05, 0x03, 0x03, 0x00, 0x00, 0x01 ]))).to.equal(true);
         });
     });
     describe('encodeSubjectPublicKey', function () {
@@ -146,11 +145,11 @@ describe('asn1', function() {
         });
         it('should correctly encode a trivial two-byte public ECC key', function() {
             var res = asn1.encodeSubjectPublicKey(new Buffer([ 0x01 ]), new Buffer([ 0x02 ]));
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x04, 0x00, 0x04, 0x01, 0x02 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x04, 0x00, 0x04, 0x01, 0x02 ]))).to.equal(true);
         });
         it('should correctly encode a trivial four-byte public ECC key', function() {
             var res = asn1.encodeSubjectPublicKey(new Buffer([ 0x01, 0x02 ]), new Buffer([ 0x03, 0x04 ]));
-            expect(util.bufferEquals(res, new Buffer([ 0x03, 0x06, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x03, 0x06, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04 ]))).to.equal(true);
         });
     });
     describe('.encodeInteger()', function () {
@@ -162,93 +161,93 @@ describe('asn1', function() {
         });
         it('should encode zero correctly', function () {
             var res = asn1.encodeInteger(0);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x01, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x01, 0x00 ]))).to.equal(true);
         });
         it('should encode one correctly', function () {
             var res = asn1.encodeInteger(1);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x01, 0x01 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x01, 0x01 ]))).to.equal(true);
         });
         it('should encode 0x7f correctly', function () {
             var res = asn1.encodeInteger(0x7f);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x01, 0x7f ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x01, 0x7f ]))).to.equal(true);
         });
         it('should encode 0x80 correctly', function () {
             var res = asn1.encodeInteger(0x80);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x02, 0x00, 0x80 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x02, 0x00, 0x80 ]))).to.equal(true);
         });
         it('should encode 0xff correctly', function () {
             var res = asn1.encodeInteger(0xff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x02, 0x00, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x02, 0x00, 0xff ]))).to.equal(true);
         });
         it('should encode 0x0100 correctly', function () {
             var res = asn1.encodeInteger(0x0100);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x02, 0x01, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x02, 0x01, 0x00 ]))).to.equal(true);
         });
         it('should encode 0x7fff correctly', function () {
             var res = asn1.encodeInteger(0x7fff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x02, 0x7f, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x02, 0x7f, 0xff ]))).to.equal(true);
         });
         it('should encode 0x8000 correctly', function () {
             var res = asn1.encodeInteger(0x8000);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x03, 0x00, 0x80, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x03, 0x00, 0x80, 0x00 ]))).to.equal(true);
         });
         it('should encode 0xffff correctly', function () {
             var res = asn1.encodeInteger(0xffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x03, 0x00, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x03, 0x00, 0xff, 0xff ]))).to.equal(true);
         });
         it('should encode 0x010000 correctly', function () {
             var res = asn1.encodeInteger(0x010000);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x03, 0x01, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x03, 0x01, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0x7f0000 correctly', function () {
             var res = asn1.encodeInteger(0x7f0000);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x03, 0x7f, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x03, 0x7f, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0x800000 correctly', function () {
             var res = asn1.encodeInteger(0x800000);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x04, 0x00, 0x80, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x04, 0x00, 0x80, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0xffffff correctly', function () {
             var res = asn1.encodeInteger(0xffffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x04, 0x00, 0xff, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x04, 0x00, 0xff, 0xff, 0xff ]))).to.equal(true);
         });
         it('should encode 0x01000000 correctly', function () {
             var res = asn1.encodeInteger(0x01000000);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x04, 0x01, 0x00, 0x00, 0x00 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x04, 0x01, 0x00, 0x00, 0x00 ]))).to.equal(true);
         });
         it('should encode 0x7fffffff correctly', function () {
             var res = asn1.encodeInteger(0x7fffffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x04, 0x7f, 0xff, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x04, 0x7f, 0xff, 0xff, 0xff ]))).to.equal(true);
         });
         it('should encode 0xffffffff correctly', function () {
             var res = asn1.encodeInteger(0xffffffff);
-            expect(util.bufferEquals(res, new Buffer([ 0x02, 0x05, 0x00, 0xff, 0xff, 0xff, 0xff ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x02, 0x05, 0x00, 0xff, 0xff, 0xff, 0xff ]))).to.equal(true);
         });
     });
     describe('.encodeECPrivateKey()', function () {
         it('should encode TEST_P256_KEY correctly', function () {
             var res = asn1.encodeECPrivateKey(TEST_P256_KEY_DATA.curve, TEST_P256_KEY_DATA.x, TEST_P256_KEY_DATA.y, TEST_P256_KEY_DATA.d);
-            expect(util.bufferEquals(res, TEST_P256_PRIVATE_KEY_ENCODING)).to.equal(true);
+            expect(res.equals(TEST_P256_PRIVATE_KEY_ENCODING)).to.equal(true);
         });
     });
     describe('.encodeECSubjectPublicKeyInfo()', function () {
         it('should encode TEST_P256_KEY correctly', function () {
             var res = asn1.encodeECSubjectPublicKeyInfo(TEST_P256_KEY_DATA.curve, TEST_P256_KEY_DATA.x, TEST_P256_KEY_DATA.y);
-            expect(util.bufferEquals(res, TEST_P256_PUBLIC_KEY_ENCODING)).to.equal(true);
+            expect(res.equals(TEST_P256_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
     });
     describe('.encodeDerEcdsaSignature()', function() {
         it('should encode a dummy signature with two single-byte INTEGERs correctly', function () {
             var res = asn1.encodeEcdsaSignature(new Buffer([ 0 ]), new Buffer([ 1 ]));
-            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]))).to.equal(true);
         });
         it('should encode a dummy signature with two multi-byte INTEGERs correctly', function () {
             var res = asn1.encodeEcdsaSignature(new Buffer([ 0, 1 ]), new Buffer([ 2, 3 ]));
-            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]))).to.equal(true);
         });
         it('should not pad negative INTEGERs with leading zeros', function () {
             var res = asn1.encodeEcdsaSignature(new Buffer([ 0x80 ]), new Buffer([ 0x81 ]));
-            expect(util.bufferEquals(res, new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x80, 0x02, 0x01, 0x81 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x80, 0x02, 0x01, 0x81 ]))).to.equal(true);
         });
     });
     describe('.decodeDerObject()', function() {
@@ -411,21 +410,21 @@ describe('asn1', function() {
         it('should correctly parse a SEQUENCE of two single-byte INTEGERs', function () {
             // 0x00 & 0x01
             var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]));
-            expect(util.bufferEquals(res.r, new Buffer([ 0 ]))).to.equal(true);
-            expect(util.bufferEquals(res.s, new Buffer([ 1 ]))).to.equal(true);
+            expect(res.r.equals(new Buffer([ 0 ]))).to.equal(true);
+            expect(res.s.equals(new Buffer([ 1 ]))).to.equal(true);
         });
         it('should correctly parse a SEQUENCE of two multi-byte INTEGERs', function () {
             // 0x0001 & 0x0203
             var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]));
-            expect(util.bufferEquals(res.r, new Buffer([ 0, 1 ]))).to.equal(true);
-            expect(util.bufferEquals(res.s, new Buffer([ 2, 3 ]))).to.equal(true);
+            expect(res.r.equals(new Buffer([ 0, 1 ]))).to.equal(true);
+            expect(res.s.equals(new Buffer([ 2, 3 ]))).to.equal(true);
         });
         it('should correctly parse a SEQUENCE of three single-byte INTEGERs, ignoring the third', function () {
             // 0x00, 0x01 & 0x02
             // TODO: Should this be an error?
             var res = asn1.decodeDerEcdsaSignature(new Buffer([ 0x30, 0x09, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01, 0x02, 0x01, 0x02 ]));
-            expect(util.bufferEquals(res.r, new Buffer([ 0 ]))).to.equal(true);
-            expect(util.bufferEquals(res.s, new Buffer([ 1 ]))).to.equal(true);
+            expect(res.r.equals(new Buffer([ 0 ]))).to.equal(true);
+            expect(res.s.equals(new Buffer([ 1 ]))).to.equal(true);
         });
     });
 });

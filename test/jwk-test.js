@@ -1,5 +1,4 @@
 var expect      = require('chai').expect;
-var util        = require('./util');
 var asn1        = require('../lib/asn1');
 var base64url   = require('../lib/base64url');
 var jwk         = require('../lib/jwk');
@@ -25,7 +24,7 @@ describe('jwk', function() {
                 'k': 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
             }, EXPECTED_ENCODING = 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ+EstJQLr/T+1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow==';
 
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), new Buffer(EXPECTED_ENCODING, 'base64'))).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY).equals(new Buffer(EXPECTED_ENCODING, 'base64'))).to.equal(true);
         });
         it('should throw an error on missing elliptic curve', function () {
             expect(function () { jwk.jwkToOpenSSL({ kty: 'EC', x: 'x', y: 'y' }); }).to.throw('Curve (crv) missing');
@@ -59,10 +58,10 @@ describe('jwk', function() {
                 '-----END PUBLIC KEY-----\n'
             );
 
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY, { "public": true }), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY).equals(EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY, { "public": true }).equals(EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY).equals(EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
         it('should correctly convert elliptic curve key from JWS example A.4', function() {
             var KEY = {
@@ -88,10 +87,10 @@ describe('jwk', function() {
                 '-----END PUBLIC KEY-----\n'
             );
 
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY, { "public": true }), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY).equals(EXPECTED_PRIVATE_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY, { "public": true }).equals(EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
             delete KEY.d;
-            expect(util.bufferEquals(jwk.jwkToOpenSSL(KEY), EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
+            expect(jwk.jwkToOpenSSL(KEY).equals(EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
     });
 });
