@@ -98,6 +98,12 @@ describe('base64url', function() {
 
             expect(res).to.equal(base64Alphabet);
         });
+
+        it('should correctly translate double base64url alphabet to double base64', function () {
+            var res = base64url.toBase64String(base64urlAlphabet + base64urlAlphabet);
+
+            expect(res).to.equal(base64Alphabet + base64Alphabet);
+        });
     });
 
     describe('.fromBase64String()', function() {
@@ -177,6 +183,12 @@ describe('base64url', function() {
             var res = base64url.fromBase64String(base64Alphabet);
 
             expect(res).to.equal(base64urlAlphabet);
+        });
+
+        it('should correctly translate double base64 alphabet to double base64url', function () {
+            var res = base64url.fromBase64String(base64Alphabet + base64Alphabet);
+
+            expect(res).to.equal(base64urlAlphabet + base64urlAlphabet);
         });
     });
 });
