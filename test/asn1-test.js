@@ -242,12 +242,12 @@ describe('asn1', function() {
             expect(res.equals(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x00, 0x02, 0x01, 0x01 ]))).to.equal(true);
         });
         it('should encode a dummy signature with two multi-byte INTEGERs correctly', function () {
-            var res = asn1.encodeEcdsaSignature(new Buffer([ 0, 1 ]), new Buffer([ 2, 3 ]));
-            expect(res.equals(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x01, 0x02, 0x02, 0x02, 0x03 ]))).to.equal(true);
+            var res = asn1.encodeEcdsaSignature(new Buffer([ 1, 2 ]), new Buffer([ 3, 4 ]));
+            expect(res.equals(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x01, 0x02, 0x02, 0x02, 0x03, 0x04 ]))).to.equal(true);
         });
-        it('should not pad negative INTEGERs with leading zeros', function () {
+        it('should pad negative INTEGERs with leading zeros', function () {
             var res = asn1.encodeEcdsaSignature(new Buffer([ 0x80 ]), new Buffer([ 0x81 ]));
-            expect(res.equals(new Buffer([ 0x30, 0x06, 0x02, 0x01, 0x80, 0x02, 0x01, 0x81 ]))).to.equal(true);
+            expect(res.equals(new Buffer([ 0x30, 0x08, 0x02, 0x02, 0x00, 0x80, 0x02, 0x02, 0x00, 0x81 ]))).to.equal(true);
         });
     });
     describe('.decodeDerObject()', function() {
