@@ -4,8 +4,8 @@ var jws         = require('../lib/jws');
 var base64url   = require('../lib/base64url');
 
 describe('jwt', function() {
-    // Test data from JWS Internet Draft example A.1
-    var jwsDraftExampleA1 = {
+    // Test data from RFC 7515 example A.1
+    var rfc7515ExampleA1 = {
         algorithm: jws.signatureAlgorithm.HmacWithSha256,
         key: {
             'kty': 'oct',
@@ -20,8 +20,8 @@ describe('jwt', function() {
             'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.' +
             'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
     };
-    // Test data from JWS Internet Draft example A.3
-    var jwsDraftExampleA3 = {
+    // Test data from RFC 7515 example A.3
+    var rfc7515ExampleA3 = {
         algorithm: jws.signatureAlgorithm.EcdsaP256WithSha256,
         key: {
             'kty': 'EC',
@@ -37,8 +37,8 @@ describe('jwt', function() {
             'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.' +
             'DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q'
     };
-    // Test data from JWS Internet Draft example A.4
-    var jwsDraftExampleA4 = {
+    // Test data from RFC 7515 example A.4
+    var rfc7515ExampleA4 = {
         algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
         key: {
             'kty': 'EC',
@@ -54,15 +54,15 @@ describe('jwt', function() {
             'UGF5bG9hZA.' +
             'AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZqwqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8KpEHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn'
     };
-    // Test data from JWS Internet Draft example A.5
-    var jwsDraftExampleA5 = {
+    // Test data from RFC 7515 example A.5
+    var rfc7515ExampleA5 = {
         protectedHeader: { alg: jws.signatureAlgorithm.None },
         payload: '{"iss":"joe",\r\n "exp":1300819380,\r\n "http://example.com/is_root":true}',
         encodedToken: 'eyJhbGciOiJub25lIn0.' +
             'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.'
     };
-    // Test data from JOSE Cookbook Internet Draft chapter 4.3
-    var cookbookExample43 = {
+    // Test data from RFC 7520 chapter 4.3
+    var rfc7520Example43 = {
         algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
         key: {
             'kty': 'EC',
@@ -83,8 +83,8 @@ describe('jwt', function() {
             'SXTigJlzIGEgZGFuZ2Vyb3VzIGJ1c2luZXNzLCBGcm9kbywgZ29pbmcgb3V0IHlvdXIgZG9vci4gWW91IHN0ZXAgb250byB0aGUgcm9hZCwgYW5kIGlmIHlvdSBkb24ndCBrZWVwIHlvdXIgZmVldCwgdGhlcmXigJlzIG5vIGtub3dpbmcgd2hlcmUgeW91IG1pZ2h0IGJlIHN3ZXB0IG9mZiB0by4.' +
             'AE_R_YZCChjn4791jSQCrdPZCNYqHXCTZH0-JZGYNlaAjP2kqaluUIIUnC9qvbu9Plon7KRTzoNEuT4Va2cmL1eJAQy3mtPBu_u_sDDyYjnAMDxXPn7XrT0lw-kvAD890jl8e2puQens_IEKBpHABlsbEPX6sFY8OcGDqoRuBomu9xQ2'
     };
-    // Test data from JOSE Cookbook Internet Draft chapter 4.4
-    var cookbookExample44 = {
+    // Test data from RFC 7520 chapter 4.4
+    var rfc7520Example44 = {
         algorithm: jws.signatureAlgorithm.HmacWithSha256,
         key: {
             "kty": "oct",
@@ -106,127 +106,127 @@ describe('jwt', function() {
 
     describe('.encodeJwt()', function() {
         it('should complain if no algorithm is specified', function() {
-            expect(function() { jwt.encodeJwt({ typ: 'JWT' }, jwsDraftExampleA1.payload, jwsDraftExampleA1.key); }).to.throw('alg parameter must be present in header');
+            expect(function() { jwt.encodeJwt({ typ: 'JWT' }, rfc7515ExampleA1.payload, rfc7515ExampleA1.key); }).to.throw('alg parameter must be present in header');
         });
 
         it('should complain if an invalid algorithm is specified', function() {
-            expect(function() { jwt.encodeJwt({ typ: 'JWT', alg: 'ABC123' }, jwsDraftExampleA1.payload, jwsDraftExampleA1.key); }).to.throw('Unknown alg value in token header: ABC123');
+            expect(function() { jwt.encodeJwt({ typ: 'JWT', alg: 'ABC123' }, rfc7515ExampleA1.payload, rfc7515ExampleA1.key); }).to.throw('Unknown alg value in token header: ABC123');
         });
 
-        it('should correctly generate JWS draft example A1', function () {
-            var encodedToken = jwt.encodeJwt(jwsDraftExampleA1.protectedHeader, jwsDraftExampleA1.payload, jwsDraftExampleA1.key);
+        it('should correctly generate RFC 7515 example A1', function () {
+            var encodedToken = jwt.encodeJwt(rfc7515ExampleA1.protectedHeader, rfc7515ExampleA1.payload, rfc7515ExampleA1.key);
 
             // NB: We can't do a straight comparison with the test data here, since the JSON lib used in the draft spec adds line feeds during serialization.
             var encodedHeader = encodedToken.split('.')[0];
             var encodedPayload = encodedToken.split('.')[1];
             var encodedSignature = encodedToken.split('.')[2];
-            var isValid = jws.validateHmac(jwsDraftExampleA1.algorithm, jwsDraftExampleA1.key, encodedHeader, encodedPayload, encodedSignature);
+            var isValid = jws.validateHmac(rfc7515ExampleA1.algorithm, rfc7515ExampleA1.key, encodedHeader, encodedPayload, encodedSignature);
             expect(isValid).to.equal(true);
 
-            var expectedEncodedHeader = base64url.fromBase64String(new Buffer(JSON.stringify(jwsDraftExampleA1.protectedHeader)).toString('base64'));
+            var expectedEncodedHeader = base64url.fromBase64String(new Buffer(JSON.stringify(rfc7515ExampleA1.protectedHeader)).toString('base64'));
             expect(expectedEncodedHeader).to.equal(encodedHeader);
 
-            var expectedEncodedPayload = base64url.fromBase64String(new Buffer(jwsDraftExampleA1.payload).toString('base64'));
+            var expectedEncodedPayload = base64url.fromBase64String(new Buffer(rfc7515ExampleA1.payload).toString('base64'));
             expect(expectedEncodedPayload).to.equal(encodedPayload);
         });
 
-        it('should correctly generate JWS draft example A5', function () {
-            var encodedToken = jwt.encodeJwt(jwsDraftExampleA5.protectedHeader, jwsDraftExampleA5.payload);
+        it('should correctly generate RFC 7515 example A5', function () {
+            var encodedToken = jwt.encodeJwt(rfc7515ExampleA5.protectedHeader, rfc7515ExampleA5.payload);
 
-            expect(jwsDraftExampleA5.encodedToken).to.equal(encodedToken);
+            expect(rfc7515ExampleA5.encodedToken).to.equal(encodedToken);
         });
 
-        it('should "correctly" generate JOSE Cookbook draft example 4.3', function () {
-            var encodedToken = jwt.encodeJwt(cookbookExample43.protectedHeader,
-                new Buffer(base64url.toBase64String(cookbookExample43.encodedPayload), 'base64').toString(),
-                cookbookExample43.key);
+        it('should "correctly" generate RFC 7520 example 4.3', function () {
+            var encodedToken = jwt.encodeJwt(rfc7520Example43.protectedHeader,
+                new Buffer(base64url.toBase64String(rfc7520Example43.encodedPayload), 'base64').toString(),
+                rfc7520Example43.key);
 
-            expect(jwt.validateJwt(encodedToken, cookbookExample43.key)).to.equal(true);
+            expect(jwt.validateJwt(encodedToken, rfc7520Example43.key)).to.equal(true);
         });
 
-        it('should correctly generate JOSE Cookbook draft example 4.4', function () {
-            var encodedToken = jwt.encodeJwt(cookbookExample44.protectedHeader,
-                new Buffer(base64url.toBase64String(cookbookExample44.encodedPayload), 'base64').toString(),
-                cookbookExample44.key);
+        it('should correctly generate RFC 7520 example 4.4', function () {
+            var encodedToken = jwt.encodeJwt(rfc7520Example44.protectedHeader,
+                new Buffer(base64url.toBase64String(rfc7520Example44.encodedPayload), 'base64').toString(),
+                rfc7520Example44.key);
 
-            expect(cookbookExample44.encodedToken).to.equal(encodedToken);
+            expect(rfc7520Example44.encodedToken).to.equal(encodedToken);
         });
     });
 
     describe('.validateJwt()', function() {
         it('should complain if less than three fields are present', function () {
             expect(function () {
-                jwt.validateJwt('aaaa.bbbb', jwsDraftExampleA1.key);
+                jwt.validateJwt('aaaa.bbbb', rfc7515ExampleA1.key);
             }).to.throw('Invalid JWT');
         });
 
         it('should complain if more than three fields are present', function () {
             expect(function () {
-                jwt.validateJwt('aaaa.bbbb.cccc.dddd', jwsDraftExampleA1.key);
+                jwt.validateJwt('aaaa.bbbb.cccc.dddd', rfc7515ExampleA1.key);
             }).to.throw('Invalid JWT');
         });
 
         it('should complain if a non-JSON header is supplied', function () {
             expect(function () {
-                jwt.validateJwt('aaaa' + '.' + jwsDraftExampleA1.encodedPayload + '.' + jwsDraftExampleA1.encodedSignature, jwsDraftExampleA1.key);
+                jwt.validateJwt('aaaa' + '.' + rfc7515ExampleA1.encodedPayload + '.' + rfc7515ExampleA1.encodedSignature, rfc7515ExampleA1.key);
             }).to.throw('JWS protected header is not valid JSON');
         });
 
         it('should not validate a modified signature', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken.substring(0, jwsDraftExampleA1.encodedToken.length - 1) + '1', jwsDraftExampleA1.key)).to.equal(false);
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken.substring(0, rfc7515ExampleA1.encodedToken.length - 1) + '1', rfc7515ExampleA1.key)).to.equal(false);
         });
 
         it('should not validate a truncated signature', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken.substring(0, jwsDraftExampleA1.encodedToken.length - 1), jwsDraftExampleA1.key)).to.equal(false);
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken.substring(0, rfc7515ExampleA1.encodedToken.length - 1), rfc7515ExampleA1.key)).to.equal(false);
         });
 
         it('should not validate a padded signature', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken + '1', jwsDraftExampleA1.key)).to.equal(false);
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken + '1', rfc7515ExampleA1.key)).to.equal(false);
         });
 
         it('should not validate with a truncated key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
-                'kty': jwsDraftExampleA1.key.kty,
-                'k': jwsDraftExampleA1.key.k.substring(0, jwsDraftExampleA1.key.k.length - 2)
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken, {
+                'kty': rfc7515ExampleA1.key.kty,
+                'k': rfc7515ExampleA1.key.k.substring(0, rfc7515ExampleA1.key.k.length - 2)
             })).to.equal(false);
         });
 
         it('should not validate with a padded key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
-                'kty': jwsDraftExampleA1.key.kty,
-                'k': jwsDraftExampleA1.key.k + '12'
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken, {
+                'kty': rfc7515ExampleA1.key.kty,
+                'k': rfc7515ExampleA1.key.k + '12'
             })).to.equal(false);
         });
 
         it('should not validate with a modified key', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, {
-                'kty': jwsDraftExampleA1.key.kty,
-                'k': jwsDraftExampleA1.key.k.substring(0, jwsDraftExampleA1.key.k.length - 2) + '12'
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken, {
+                'kty': rfc7515ExampleA1.key.kty,
+                'k': rfc7515ExampleA1.key.k.substring(0, rfc7515ExampleA1.key.k.length - 2) + '12'
             })).to.equal(false);
         });
 
-        it('should correctly validate JWS draft example A1', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA1.encodedToken, jwsDraftExampleA1.key)).to.equal(true);
+        it('should correctly validate RFC 7515 example A1', function () {
+            expect(jwt.validateJwt(rfc7515ExampleA1.encodedToken, rfc7515ExampleA1.key)).to.equal(true);
         });
 
-        it('should correctly validate JWS draft example A3', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA3.encodedToken, jwsDraftExampleA3.key)).to.equal(true);
+        it('should correctly validate RFC 7515 example A3', function () {
+            expect(jwt.validateJwt(rfc7515ExampleA3.encodedToken, rfc7515ExampleA3.key)).to.equal(true);
         });
 
-        it('should correctly validate JWS draft example A4', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA4.encodedToken, jwsDraftExampleA4.key)).to.equal(true);
+        it('should correctly validate RFC 7515 example A4', function () {
+            expect(jwt.validateJwt(rfc7515ExampleA4.encodedToken, rfc7515ExampleA4.key)).to.equal(true);
         });
 
-        it('should correctly validate JWS draft example A5', function () {
-            expect(jwt.validateJwt(jwsDraftExampleA5.encodedToken)).to.equal(true);
+        it('should correctly validate RFC 7515 example A5', function () {
+            expect(jwt.validateJwt(rfc7515ExampleA5.encodedToken)).to.equal(true);
         });
 
-        it('should correctly validate JOSE Cookbook draft example 4.3', function () {
-            expect(jwt.validateJwt(cookbookExample43.encodedToken, cookbookExample43.key)).to.equal(true);
+        it('should correctly validate RFC 7520 example 4.3', function () {
+            expect(jwt.validateJwt(rfc7520Example43.encodedToken, rfc7520Example43.key)).to.equal(true);
         });
 
-        it('should correctly validate JOSE Cookbook draft example 4.4', function () {
-            expect(jwt.validateJwt(cookbookExample44.encodedToken, cookbookExample44.key)).to.equal(true);
+        it('should correctly validate RFC 7520 example 4.4', function () {
+            expect(jwt.validateJwt(rfc7520Example44.encodedToken, rfc7520Example44.key)).to.equal(true);
         });
     });
 });

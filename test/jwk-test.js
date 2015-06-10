@@ -18,7 +18,7 @@ describe('jwk', function() {
         it('should throw an error on missing symmetric key data', function () {
             expect(function () { jwk.jwkToOpenSSL({ kty: 'oct' }); }).to.throw('Key data (k) missing');
         });
-        it('should correctly convert symmetric key from JWS example A.1', function() {
+        it('should correctly convert symmetric key from RFC 7515 example A.1', function() {
             var KEY = {
                 'kty': 'oct',
                 'k': 'AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow'
@@ -38,7 +38,7 @@ describe('jwk', function() {
         it('should throw an error on an invalid curve', function () {
             expect(function () { jwk.jwkToOpenSSL({ kty: 'EC', crv: 'crv', x: 'x', y: 'y' }); }).to.throw('Unsupported Curve (crv): crv');
         });
-        it('should correctly convert elliptic curve key from JWS example A.3', function() {
+        it('should correctly convert elliptic curve key from RFC 7515 example A.3', function() {
             var KEY = {
                 'kty': 'EC',
                 'crv': 'P-256',
@@ -63,7 +63,7 @@ describe('jwk', function() {
             delete KEY.d;
             expect(jwk.jwkToOpenSSL(KEY).equals(EXPECTED_PUBLIC_KEY_ENCODING)).to.equal(true);
         });
-        it('should correctly convert elliptic curve key from JWS example A.4', function() {
+        it('should correctly convert elliptic curve key from RFC 7515 example A.4', function() {
             var KEY = {
                 'kty': 'EC',
                 'crv': 'P-521',

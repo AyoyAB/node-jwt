@@ -3,8 +3,8 @@ var jws         = require('../lib/jws');
 var base64url   = require('../lib/base64url');
 
 describe('jws', function() {
-    // Test data from JWS Internet Draft example A.1
-    var jwsDraftExampleA1 = {
+    // Test data from RFC 7515 example A.1
+    var rfc7515ExampleA1 = {
         algorithm: jws.signatureAlgorithm.HmacWithSha256,
         key: {
             'kty': 'oct',
@@ -14,8 +14,8 @@ describe('jws', function() {
         encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',
         encodedSignature: 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk'
     };
-    // Test data from JWS Internet Draft example A.3
-    var jwsDraftExampleA3 = {
+    // Test data from RFC 7515 example A.3
+    var rfc7515ExampleA3 = {
         algorithm: jws.signatureAlgorithm.EcdsaP256WithSha256,
         key: {
             'kty': 'EC',
@@ -28,8 +28,8 @@ describe('jws', function() {
         encodedPayload: 'eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ',
         encodedSignature: 'DtEhU3ljbEg8L38VWAfUAqOyKAM6-Xx-F4GawxaepmXFCgfTjDxw5djxLa8ISlSApmWQxfKTUJqPP3-Kg6NU1Q'
     };
-    // Test data from JWS Internet Draft example A.4
-    var jwsDraftExampleA4 = {
+    // Test data from RFC 7515 example A.4
+    var rfc7515ExampleA4 = {
         algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
         key: {
             'kty': 'EC',
@@ -42,8 +42,8 @@ describe('jws', function() {
         encodedPayload: 'UGF5bG9hZA',
         encodedSignature: 'AdwMgeerwtHoh-l192l60hp9wAHZFVJbLfD_UxMi70cwnZOYaRI1bKPWROc-mZZqwqT2SI-KGDKB34XO0aw_7XdtAG8GaSwFKdCAPZgoXD2YBJZCPEX3xKpRwcdOO8KpEHwJjyqOgzDO7iKvU8vcnwNrmxYbSW9ERBXukOXolLzeO_Jn'
     };
-    // Test data from JOSE Cookbook Internet Draft chapter 4.3
-    var cookbookExample43 = {
+    // Test data from RFC 7520 chapter 4.3
+    var rfc7520Example43 = {
         algorithm: jws.signatureAlgorithm.EcdsaP521WithSha512,
         key: {
             'kty': 'EC',
@@ -60,103 +60,103 @@ describe('jws', function() {
     };
 
     describe('.createHmac()', function() {
-        it('should correctly generate JWS draft example A1', function () {
+        it('should correctly generate RFC 7515 example A1', function () {
             var mac = jws.createHmac(
-                jwsDraftExampleA1.algorithm,
-                jwsDraftExampleA1.key,
-                jwsDraftExampleA1.encodedHeader,
-                jwsDraftExampleA1.encodedPayload);
+                rfc7515ExampleA1.algorithm,
+                rfc7515ExampleA1.key,
+                rfc7515ExampleA1.encodedHeader,
+                rfc7515ExampleA1.encodedPayload);
 
-            expect(mac).to.equal(jwsDraftExampleA1.encodedSignature);
+            expect(mac).to.equal(rfc7515ExampleA1.encodedSignature);
         });
     });
 
     describe('.validateHmac()', function() {
-        it('should correctly validate JWS draft example A1', function() {
+        it('should correctly validate RFC 7515 example A1', function() {
             var isValid = jws.validateHmac(
-                jwsDraftExampleA1.algorithm,
-                jwsDraftExampleA1.key,
-                jwsDraftExampleA1.encodedHeader,
-                jwsDraftExampleA1.encodedPayload,
-                jwsDraftExampleA1.encodedSignature);
+                rfc7515ExampleA1.algorithm,
+                rfc7515ExampleA1.key,
+                rfc7515ExampleA1.encodedHeader,
+                rfc7515ExampleA1.encodedPayload,
+                rfc7515ExampleA1.encodedSignature);
 
             expect(isValid).to.equal(true);
         });
     });
 
     describe('.createSignature()', function() {
-        it('should "correctly" generate and validate JWS draft example A3', function () {
+        it('should "correctly" generate and validate RFC 7515 example A3', function () {
             var signature = jws.createSignature(
-                jwsDraftExampleA3.algorithm,
-                jwsDraftExampleA3.key,
-                jwsDraftExampleA3.encodedHeader,
-                jwsDraftExampleA3.encodedPayload);
+                rfc7515ExampleA3.algorithm,
+                rfc7515ExampleA3.key,
+                rfc7515ExampleA3.encodedHeader,
+                rfc7515ExampleA3.encodedPayload);
 
             expect(jws.validateSignature(
-                jwsDraftExampleA3.algorithm,
-                jwsDraftExampleA3.key,
-                jwsDraftExampleA3.encodedHeader,
-                jwsDraftExampleA3.encodedPayload,
+                rfc7515ExampleA3.algorithm,
+                rfc7515ExampleA3.key,
+                rfc7515ExampleA3.encodedHeader,
+                rfc7515ExampleA3.encodedPayload,
                 signature)).to.equal(true);
         });
 
-        it('should "correctly" generate and validate JWS draft example A4', function () {
+        it('should "correctly" generate and validate RFC 7515 example A4', function () {
             var signature = jws.createSignature(
-                jwsDraftExampleA4.algorithm,
-                jwsDraftExampleA4.key,
-                jwsDraftExampleA4.encodedHeader,
-                jwsDraftExampleA4.encodedPayload);
+                rfc7515ExampleA4.algorithm,
+                rfc7515ExampleA4.key,
+                rfc7515ExampleA4.encodedHeader,
+                rfc7515ExampleA4.encodedPayload);
 
             expect(jws.validateSignature(
-                jwsDraftExampleA4.algorithm,
-                jwsDraftExampleA4.key,
-                jwsDraftExampleA4.encodedHeader,
-                jwsDraftExampleA4.encodedPayload,
+                rfc7515ExampleA4.algorithm,
+                rfc7515ExampleA4.key,
+                rfc7515ExampleA4.encodedHeader,
+                rfc7515ExampleA4.encodedPayload,
                 signature)).to.equal(true);
         });
 
-        it('should "correctly" generate and validate Jose Cookbook draft example 4.3', function () {
+        it('should "correctly" generate and validate RFC 7520 example 4.3', function () {
             var signature = jws.createSignature(
-                cookbookExample43.algorithm,
-                cookbookExample43.key,
-                cookbookExample43.encodedHeader,
-                cookbookExample43.encodedPayload);
+                rfc7520Example43.algorithm,
+                rfc7520Example43.key,
+                rfc7520Example43.encodedHeader,
+                rfc7520Example43.encodedPayload);
 
             expect(jws.validateSignature(
-                cookbookExample43.algorithm,
-                cookbookExample43.key,
-                cookbookExample43.encodedHeader,
-                cookbookExample43.encodedPayload,
+                rfc7520Example43.algorithm,
+                rfc7520Example43.key,
+                rfc7520Example43.encodedHeader,
+                rfc7520Example43.encodedPayload,
                 signature)).to.equal(true);
         });
     });
 
     describe('.validateSignature()', function() {
-        it('should correctly validate JWS draft example A3', function () {
+        it('should correctly validate RFC 7515 example A3', function () {
             expect(jws.validateSignature(
-                jwsDraftExampleA3.algorithm,
-                jwsDraftExampleA3.key,
-                jwsDraftExampleA3.encodedHeader,
-                jwsDraftExampleA3.encodedPayload,
-                jwsDraftExampleA3.encodedSignature)).to.equal(true);
+                rfc7515ExampleA3.algorithm,
+                rfc7515ExampleA3.key,
+                rfc7515ExampleA3.encodedHeader,
+                rfc7515ExampleA3.encodedPayload,
+                rfc7515ExampleA3.encodedSignature)).to.equal(true);
         });
 
-        it('should correctly validate JWS draft example A4', function () {
+        it('should correctly validate RFC 7515 example A4', function () {
             expect(jws.validateSignature(
-                jwsDraftExampleA4.algorithm,
-                jwsDraftExampleA4.key,
-                jwsDraftExampleA4.encodedHeader,
-                jwsDraftExampleA4.encodedPayload,
-                jwsDraftExampleA4.encodedSignature)).to.equal(true);
+                rfc7515ExampleA4.algorithm,
+                rfc7515ExampleA4.key,
+                rfc7515ExampleA4.encodedHeader,
+                rfc7515ExampleA4.encodedPayload,
+                rfc7515ExampleA4.encodedSignature)).to.equal(true);
         });
 
-        it('should correctly validate Jose Cookbook draft example 4.3', function () {
+        it('should correctly validate RFC 7520 example 4.3', function () {
             expect(jws.validateSignature(
-                cookbookExample43.algorithm,
-                cookbookExample43.key,
-                cookbookExample43.encodedHeader,
-                cookbookExample43.encodedPayload,
-                cookbookExample43.encodedSignature)).to.equal(true);
+                rfc7520Example43.algorithm,
+                rfc7520Example43.key,
+                rfc7520Example43.encodedHeader,
+                rfc7520Example43.encodedPayload,
+                rfc7520Example43.encodedSignature)).to.equal(true);
         });
     });
 });
